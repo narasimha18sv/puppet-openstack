@@ -1,5 +1,3 @@
-include ::openstack::config
-
 node '<swift storage>'{
   include ::openstack::role::swiftcontroller
   include ::openstack::role::swiftstorage
