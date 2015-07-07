@@ -1,23 +1,9 @@
-include percona
-
 include ::openstack::config
-include ::openstack::role::swiftcontroller
-include ::openstack::role::swiftstorage
-node 'rabbitc1' {
-        include ::openstack::profile::rabbitmq
-        include ::openstack::profile::mongodb 
+
+node '<swift storage>'{
+  include ::openstack::role::swiftcontroller
+  include ::openstack::role::swiftstorage
 }
-
-
-node 'rabbitc2' {
-        include ::openstack::profile::rabbitmq
-}
-
-
-node 'rabbitc3' {
-        include ::openstack::profile::rabbitmq
-}
-
 
 node '<keystone node name>' {
 
