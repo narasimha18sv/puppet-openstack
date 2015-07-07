@@ -1,1 +1,1 @@
-# puppet-openstack
+Puppet Openstack Installer:
