@@ -1,0 +1,20 @@
+< policy.pp : Fix duplicate ressource issue openstacklib::policy
+< Default setting san_thin_provision should be true
+< policy.json: Allow one to manage them from the puppet module
+< Switch to metadata.json for Puppet forge releases
+< correct package name for cinder backup
+< grep check of "cinder type-list" should look for an exact match
+< EMC VNX backend support
+< Add tuning data base configs
+< Add use_multipath_for_image_xfer with E-Series
+< Use $::processorcount to compute API workers number
+< Make user creation optional when creating service.
+< Allow configuration of Cinder API workers
+< Migrate mysql backend to use openstacklib::db::mysql
+< Hide secrets from puppet logs
+< Use 2.2 as the default mysql_module
+< Make Modulefile summary and description consistent
+< v2 endpoints: internal & admin protocols support
+< Add secret flag to netapp_sa_password option
+< Normalize Gemfile & pin tests to rspec < 2.99
+< Storage availability zone support

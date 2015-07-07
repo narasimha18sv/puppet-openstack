@@ -1,0 +1,191 @@
+policy.pp : Fix duplicate ressource issue openstacklib::policy
+Default setting san_thin_provision should be true
+policy.json: Allow one to manage them from the puppet module
+Switch to metadata.json for Puppet forge releases
+correct package name for cinder backup
+grep check of "cinder type-list" should look for an exact match
+Set volume_driver for iscsi backend explicitly
+EMC VNX backend support
+Add tuning data base configs
+Add use_multipath_for_image_xfer with E-Series
+Use $::processorcount to compute API workers number
+Make user creation optional when creating service.
+Add extended logging options.
+Allow configuration of Cinder API workers
+Migrate mysql backend to use openstacklib::db::mysql
+Add path to exec cinder type-create
+Extend cinder::setup_test_volume to use cinder provided path
+Hide secrets from puppet logs
+Use 2.2 as the default mysql_module
+volume/iscsi: Fix typo and use real default iscsi_helper in tests
+Fixes Facts string comparisons in CentOS 7
+Ensure target service is running when using lioadm
+Make Modulefile summary and description consistent
+v2 endpoints: internal & admin protocols support
+Add secret flag to netapp_sa_password option
+Add region support for type creation/setting
+Normalize Gemfile & pin tests to rspec < 2.99
+Storage availability zone support
+Enable cinder server to be run in SSL mode
+SSL for communication between cinder and rabbitmq
+Implement rspec function it_raises
+cinder-type: delete PATH in exec
+don't create a cinder type if already it exist
+move default_volume_type to cinder::api
+Add Cinder v2 Keystone endpoint support
+Update puppetlabs-rabbitmq dependency
+fix: use $database_connection_real
+require mysql binding for mysql db only
+4.0.0 - 2014.1.0 - Icehouse Release
+fix deprecated sql_connection, idle_timeout
+Use lioadm as iscsi helper on RHEL 7
+Add support for volumes backed by Dell EqualLogic
+RBD backend: use ensure_resource
+Introduce cinder:config to manage custom options
+Change mysql default charset to utf8
+Updated to match semver and release notes.
+Add backend for GlusterFS, Nexanta, SAN, and SolidFire
+multi backends: factorize code between single and multi backends
+Introduce amqp_durable_queue parameter for cinder:init
+Add region support to cinder
+Fixed gate by Updating Gemfile to pin Rake to 10.1.1
+Revert "Add default_volume_type as cinder api parameter"
+multi-backend: configure default type
+Add support for puppetlabs-mysql 2.2
+Fix a typo in README
+Add support for latest puppetlabs-rabbitmq
+add parameter for endpoint protocols
+Add support for copy offload, E-Series driver
+Adding manage_service parameter to all services
+Add support for multiple NetApp backends
+volume/rbd: Re-enable conditional for string parameters
+Added NFS max use and oversub ratios
+[vmdk] Replaced pip with native package manager
+Add log_dir param. by default and allow users to disable it
+multi rbd: add opts, deprecate glance_api_version
+Add default_volume_type as cinder api parameter
+Fix typo in cinder_scheduler_spec
+rbd: add params and deprecate glance_api_version
+Remove deprecated cinder::base class
+Add support for VMDK driver
+Delete control_exchange flag
+Fix puppet lint WARNING issues
+Update GlusterFS driver
+Update manifest and spec to use new NetApp unified driver config options.
+Creating qpid_sasl_mechanisms parameter
+Using contain_class instead of include_class
+Fix default Swift URL in Backup service
+Add Ceph as backup backend support
+Improve Cinder Backup support
+Add Glance support
+Add Swift as backup backend support
+[bp] Add support for Cinder multi-backend
+Remove package require for cinder-volume
+Clean up errors in the README examples
+Add cinder::ceilometer class
+Add solidfire manifest
+Prepping module for 2.2.0 release.
+Pin to posgresql 2.5 module
+Add ratelimiting parameters to cinder::api
+Check the parameter enabled before db_sync
+Add ability to configure control_exchange
+Add syslog support to cinder module
+Fail puppet-lint on warnings
+Add missing puppet doc
+Add default auth_uri setting for auth token.
+set package defaults to present
+Creates an empty init script override file if necessary
+Disable 80chars/class_parameter_defaults checks
+Fixes some puppet lint warnings
+Puppet Forge release 2.1.0
+Update modulefile and fixtures to use puppetlabs/inifile
+Setup test volume fails without lvm2
+Update allowed_hosts conditional statement
+Add ability to configure Cinder quotas
+Pin rabbit and mysql to major version for fixtures
+Update revision for rabbitmq
+Remove Unnecessary mysql::server Dependency
+Add support for NetApp direct drivers
+Fix cinder::rabbitmq rspec tests
+Various Puppet lint fixes
+Use Puppet boolean for better consistency
+Add support for SQL idle timeout.
+added ceph backend support
+Puppet Forge release 2.0.0
+Add support for Rabbit Clustering using a single IP address.
+Add Gemfile.lock to .gitignore
+Prepare repository for a Puppet Forge release
+Add auth_prefix_admin support to cinder::api
+Allow to hide config values from Puppet logs
+Capitalize boolean values in config files
+fix the bind_host configure
+Adds GlusterFS Driver
+Use boolean instead of string
+Add puppet-lint to Gemfile
+Remove subscribe on cinder.conf
+Require should refer to package title
+Add debug parameter
+Replace deprecated :rubygems source
+Add Nexenta Support
+Puppet 2.6 compat
+Add nfs volume backend
+Call db_sync before starting volume srvc.
+Add SAN volume backend
+Add cinder::db::postgresql class.
+Fix cinder::volume::netapp rspec tests
+Drop params require from mysql.pp.
+Add support for configuring qpid.
+Add cinder::rabbitmq class.
+Update README.md to refer to StackForge
+Set hasstatus => true for cinder services
+Renames cinder::base to cinder.
+add gitreview
+Update fixtures location to use stackforge.
+Require cinder package before running sync.
+Allow to use of rabbit_hosts
+1.1.1
+Remove temporary fixes in cinder::base
+update permission of paste config to 600
+Make scheduler_driver configurable
+release 1.1.0
+update params osfamily failure message
+Added include statement to client.pp
+update travis file for 2.6,3.1 support
+add support for purging config files
+update unit test metadata
+Add ruby19 and puppet3 to travis matrix
+Restrict permissions on cinder configuration
+make params configurable
+Changing module name to match the standard
+fix readme typo
+add readme for cinder
+Added rspec test for netapp volume support
+API bind host configurable
+Adding the ability to specify https for the public endpoint
+Added license for #10
+NetApp driver
+Include /etc/cinder/volumes/ in tgt targets.conf
+Add Redhat support
+Release 1.0.1
+Release 1.0.0
+add cinder client
+add travisci support
+Add basic spec tests
+set volume package dep to title
+catch unsupported osfamily
+set default verbose to False
+update Modulefile
+remove trailing class param comma
+add test class
+ensure scheduler starts after db sync
+Re-adding Modulefile
+Removed Modulefile for puppetlabs repo
+iscsi_ip_address is required
+tgt config file is now included in cinder-volume package.
+Multi-region support
+changed vg name, added tgt configuration
+Add a modulefile
+update cinder for folsome
+Added ini_setting file notification
+changes
+Initial commit of new configuration

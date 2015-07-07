@@ -1,0 +1,14 @@
+{
+  "name": "aimonb-aviator",
+  "version": "0.5.1",
+  "author": "aimonb",
+  "summary": "Puppet feature wrapper for the Aviator OpenStack API library for Ruby",
+  "license": "MIT License",
+  "source": "https://github.com/aimonb/puppet_aviator",
+  "project_page": "https://github.com/aimonb/puppet_aviator",
+  "issues_url": "https://github.com/aimonb/puppet_aviator/issues",
+  "description": "UNKNOWN",
+  "dependencies": [
+  
+  ]
+}

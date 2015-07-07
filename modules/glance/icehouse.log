@@ -1,0 +1,222 @@
+1308099348 initial commit for glance.
+1308260708 Fixing the filename for the default sql_connection
+1308260826 Making the sql_connection a variable
+1308282662 Added missing comma
+1308283139 added hasrestart, hasstatus to services.
+1308637305 Edited Glance registry template to add log option.
+1308683960 Modify class parameters, templates and tests for logging options avoiding use of 'debug'
+1308684672 Set verbose + debug false by default
+1313536094 Updated glance-api.conf in accordance with https://bugs.launchpad.net/glance/+bug/814981
+1313536137 Updated glance-registry.conf in accordance with https://bugs.launchpad.net/glance/+bug/814981
+1313620208 fix described in https://bugs.launchpad.net/glance/+bug/827034
+1325545154 (#11693) Add package_ensure param to glance class
+1325545213 (#11694) Add bind host to template
+1325545310 (#11692) Add unit tests
+1325706028 Style update
+1326310903 Add README
+1326310924 Add rdoc to glance::api
+1331676536 Add $ to glance package_ensure
+1331676598 Rafactor glance api to merge defaults
+1331677295 Update unit test to reflect mode change
+1331677409 Update the README
+1331962040 Add fedora support for glance
+1331963200 Add an example file
+1332222883 Add python migrate dependency
+1332223043 update spec test to set osfaily
+1332341569 fix typo
+1333064603 Add code for db and host_access
+1333064699 Refactor config files for essex
+1333064727 Update example site.pp
+1333064740 Add test script
+1333126401 Add code to use latest ppas
+1333165805 Ensure repo stage is applied before main stage
+1333234902 Split api.conf file into fragments
+1333235186 Refactor glance::api to use fragments
+1333235316 Remove service parameters
+1333235369 Add rspec tests
+1333235480 Refactor glance-api.conf erb file
+1333235747 Refactor example based on fragment reafactor
+1333236443 Namespace glance apu fragments to avoid duplicates
+1333236805 Remove dependency from glance::api to concat::setup
+1333381016 Add integration test code
+1333472444 Remove backend class
+1333472588 Fix broken tests
+1333643224 Refactor api-ini config files
+1333658790 Remove ref to deprecated keystone::sqlite
+1333754158 Add test code for glance with mysql backend
+1333986727 Update keystone tenant name
+1333991461 Remove unused admin_token
+1333991485 Remove explicit management of python-migrate
+1333991547 Require mysql::python
+1334075151 Update glance service definitions
+1334102944 Update script for loading glance images
+1334190017 Make repo setup code Debian specific
+1334259569 Perform explicit db migrations
+1334265223 DB sync should also require db privs
+1334265904 Do not start services until glance user_role exists
+1334269319 Make the db_sync command different per distro
+1334297551 Only changes to the database should trigger db_sync
+1334608722 Run glance-manage db_sync as glance
+1334686532 Ensure that glance requires a backend
+1334687464 Require python keystone
+1334698230 Fix backend config resource
+1335163908 Move mysql code to db::mysql
+1335165971 Update glance example
+1335167602 Set registry mysql connection
+1335213995 Update glance tenant
+1335553813 Refactor of glance::keystone::auth
+1336058681 Create configuration class for glance client, mirroring puppetlabs nova::client to some degree.
+1336059375 Specify glance client package name in params.pp.
+1336079393 (#14221) add initial Modulefile to prep for forge release
+1336079972 Make endpoint configuration in glance::keystone::auth optional in case not using templated catalog file for defining endpoints. (keystone_endpoint type seems to assume always using SQL driver.)
+1336080086 Fix default boolean value for configure_endpoint.
+1336159538 (#14221) Cleanup the readme a bit
+1336513135 This commit fixes spec test failures that were caused by using RI's version of the concat module.
+1336514746 fix old puppet
+1337180089 Adding initial spec for glance::db::mysql
+1337180413 Change require => mysql::server to mysql::config so the mysql is fully configured before glance database is created.
+1337180669 Allow override of mysql charset & small whitespace fixes and spec improvements to test this change.
+1338310213 Add files for CI support
+1338501862 Switch to using the puppetlabs_spec_helper gem for common files instead of duplicating code
+1339102996 Update modulefile for initial release; add initial changelog
+1340039693 Add enabled parameter to glance services.
+1344069408 First attempt at creating a glance_image type
+1344105509 Slight changes.
+1345577963 Customizable auth_url, not hardwired to 127.0.0.1
+1345759034 Add Apache LICENSE FILE
+1349327040 Convert to ini file management
+1349327180 Add db params to api service
+1349327203 Switch config file owner to glance group
+1349327266 Modify keystone auth
+1349327316 Make glance::db::mysql dependent on mysql::server
+1349327366 Add python-mysqldb code
+1349327376 Add registry keystone params
+1349728701 Release 0.2.0
+1349899185 Properly load parent provider from another module
+1350199141 remove deprecated code
+1350199247 switch log_verbose,log_debug to debug,verbose
+1350199288 update fixtures
+1350199309 remove auth_uri
+1350199359 Make deps optional
+1350199389 fix backends
+1350199400 fix unit tests
+1350243373 remove password defaults
+1350243426 add gitignore
+1350243465 use mysql::python
+1350243492 fix auth_url
+1350243506 style change
+1350262577 remove conflicting notify dep from resource
+1350337048 removed accidentally commited file
+1350366007 Multi-region support
+1351017481 Add more branches
+1351278730 fix test failures.
+1351278888 Add create_resource to fixures
+1351705152 remove auth_url param
+1351724554 switch single.pp to site.pp
+1351724586 update docs
+1351724623 update passwords from test script
+1351885095 Release 1.0.0
+1352283705 Fic syntax error
+1352671886 Move from parsing glance-api-paste.ini to glance-api.conf
+1353520392 Adding the ability to specify https for the public endpoint
+1355839307 site.pp overrides sql_connection for glance-api.conf also
+1355846247 Glance's Keystone endpoint does not need the '/v1'
+1355847905 And don't forget to update the tests !
+1357155745 reformat readme
+1357155896 Update README.md
+1357949241 changes required to support purging
+1360405729 Add ruby19 and puppet3 to travis matrix
+1360972924 do not add quotes to image name
+1361398563 refactor of glance_image
+1362369925 remove 2.6 support for travis file
+1362520997 update travis file to add 2.6 and 3.1 support
+1363714156 release 1.1.0
+1365114185 Add swift_store_auth_version to swift backend.
+1365114388 Make swift backend not enherit glance::api.
+1365620157 Update fixtures location to use stackforge.
+1365626345 Add gitreview
+1366159867 update README
+1366733389 Add glance::db::postgresql class.
+1366969719 Allow paste deploy flavor to be passed for glance api
+1367526357 Replace deprecated :rubygems source
+1368155553 Use boolean instead of string
+1369179022 Capitalize boolean values in config files
+1369179422 Add puppet-lint to Gemfile
+1369683637 Prepare repository for a Puppet Forge release
+1370452794 Add missing glance::params include in client
+1370942933 Add support for auth_admin_prefix in glance
+1371083887 Check if auth_admin_prefix is defined
+1371166696 Fix misnamed protocol param in glance-api.conf
+1371431248 Allow blank keystone flavor in glance configs
+1371493866 fix api.pp and registry.pp to work with postgresql
+1371748822 glance::client was not installing the correct package
+1372133836 Puppet Forge release 2.0.0
+1372652337 Do not initialize version_control for database
+1372713897 Various Puppet lint fixes
+1372807149 Configure glance-cache.conf with file backend
+1372807729 Configure glance-cache.conf with swift backend
+1373005169 Add support for rbd in glance
+1373354623 Glance provider should retry once when service is not ready
+1374185673 Remove Unnecessary mysql::server Dependency
+1374610788 Add glance-cache-cleaner and glance-cache-pruner
+1374699678 Pin rabbit and mysql to major version for fixtures
+1375104597 Remove --silient-upload option, which is invalid
+1375182274 Update allowed_hosts conditional statement
+1375341598 Fix the glance_image type example so that it can actually be used.
+1375895562 Puppet Forge release 2.1.0
+1375900677 Update modulefile and fixtures to use puppetlabs/inifile
+1375918698 Fix lint failures
+1375996602 Add default auth_uri setting for auth token.
+1376066687 Fix some puppet lint warnings.
+1376322029 Include iso as supported disk_format
+1376340374 Disable 80chars/class_parameter_defaults checks
+1376382405 Clean all warnings for puppet-lint gate
+1377677776 Add syslog support to the glance module
+1377713552 Remove non-implemented glance::scrubber
+1377713819 Fail puppet-lint on warnings
+1377910624 Change keystone tenant and user default
+1378353840 Update glance::notify::rabbitmq options
+1378371056 Update glance::backend::rbd options
+1379720891 Fix puppet-lint issue with documentation
+1379725912 Documentation fix for admin_address
+1380040889 Pin postgresql to 2.5.
+1381172428 Preparing for 2.2.0 release.
+1383108321 Ensure keystone endpoint set before service starts
+1384347734 Replace qpid_host with qpid_hostname
+1384459400 Add parameter qpid_protocol to notify::qpid so ssl can be enabled.
+1385659265 Add Cinder backend to image store
+1386654994 Add known_stores option in class glance::api
+1387339184 Using contain_class instead of include_class
+1387783767 Remove use of deprecated include_class matcher
+1387821757 Add Gemfile.lock to gitignore
+1389211850 Make sure swift backend in-file documentation matches actual code.
+1390189480 Update glance_image provider with API v2
+1390491460 Use remove_warnings from puppet-keystone
+1390933726 Add availability to configure show_image_direct_url
+1392648300 Add support for puppetlabs-mysql 2.2
+1392899518 Add log_dir param. by default and allow users to disable it
+1393137058 Add ability to purge config
+1394118771 add parameter for endpoint protocols
+1394183381 set ssl options for glance-api
+1394184821 set ssl options for glance-registry
+1395442541 Updated to match semver and release notes.
+1395700302 Fixed gate by Updating Gemfile to pin Rake to 10.1.1
+1395776205 Added copy-on-write cloning of images to volumes.
+1396328970 Change mysql default charset to utf8
+1396360769 support separate registry/api packages
+1396362695 deprecate show_image_direct_url in glance::rbd
+1396519915 Introduce glance:config to manage custom options
+1396610006 replaced deprecated parameter notifier_strategy
+1398325843 Add multiple rabbit hosts support
+1398331611 add kombu_ssl parameters to notify::rabbitmq
+1398462753 fix rspec tests in backend::rbd and notify::qpid
+1398797236 Fixed the Glance add_image parser for new client
+1398964708 4.0.0 - 2014.1.0 - Icehouse Release
+1399220057 Fixes wrong values in get_glance_image_attrs
+1399500330 api: add image_cache_dir parameter
+1399555506 Deprecate old SQL parameters
+1400246976 Fix could not find user glance on ensure files
+1402475799 Hide secrets from puppet logs
+1403096040 Pin gem versions for stable branch
+1403222612 Release 4.1.0
+1413476771 Release 4.2.0

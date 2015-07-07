@@ -1,0 +1,194 @@
+policy.pp : Fix duplicate ressource issue openstacklib::policy
+Added metadata lint and puppet-syntax gems
+Add package_ensure where missing
+policy.json: Allow one to manage them from the puppet module
+Switch to metadata.json for Puppet forge releases
+Ensure nova-common is installed before ceilometer
+Stringify $evaluation_interval for validate_re call
+Update stdlib dependency to 4.x
+Add manage_service feature
+Make user creation optional when creating service.
+Makes kombu_ssl_* parameters optional when rabbit_use_ssl => true
+Adds ability to override service name for service catalog
+Add extended logging options.
+Migrate mysql backend to use openstacklib::db::mysql
+Fix ceilometer agent notification package error
+Add ability to disable ceilometer-collector without db
+Use 2.2 as the default mysql_module
+Remove deprecation notice for sectionless ceilometer_config
+Fixes Facts string comparisons in CentOS 7
+Make Modulefile summary and description consistent
+Normalize Gemfile & pin tests to rspec < 2.99
+Hide secrets from puppet logs
+Fixes agent_notification_service_name
+Default to utf8 for MySQL
+Fail when ssl parameters are missing and rabbit_use_ssl is set to true
+Implement rspec function it_raises
+notification agent: fix dependency cycle
+ensure_packages needs array in agent::notification
+Add RabbitMQ SSL support
+4.0.0 - 2014.1.0 - Icehouse Release
+Introduce ceilometer:config to manage custom options
+Add table to mysql_grant call
+Remove duplicate instance_usage_audit
+Updated to match semver and release notes.
+Fixed gate by Updating Gemfile to pin Rake to 10.1.1
+Add support for puppetlabs-mysql 2.2
+Fix ensure_packages error
+Fix region name configuration
+Move service polling credentials to service_credentials
+Implement notification agent service
+Add ability to override notification_topics
+Define $user referenced in db.pp
+Allow db fields configuration without doing the dbsync
+Allow log_dir to be set to false in order to disable file logging
+Changes file_path to self.file_path
+Don't match commented [DEFAULT]
+Do not enforce glance_control_exchange
+Remove glance_notifications from notification_topic
+Move metering_secret to publisher section
+Remove log_dir from params and make logs configurable in init
+Fixed mysql dependency to match other modules
+Only add ceilometer user to nova group if using compute agent
+Fix package ceilometer-alarm type error on Debian
+Add API binding options
+Add Gemfile.lock to gitignore
+Remove use of deprecated include_class matcher
+TTL mechanism support with expirer service
+Updates to params.pp for mongo and postgres packages
+fix postgresql connection string
+changed rabbit_virtualhost(wrong) to rabbit_virtual_host
+Alarm: record history support
+Updated site.pp and added alarm manifests
+Added alarm-notifier and alarm-evaluator services
+Allow to set full url for endpoints
+Add ceilometer::agent::auth.
+Use connection to replace deprecated database_connection
+Inline a custom file_line provider to fix agent.
+Add default auth_uri setting for auth token.
+Handle Centos/RHEL pymongo packages
+Fail puppet-lint on warnings
+Clean all warnings for puppet-lint gate
+Disable 80chars/class_parameter_defaults checks
+Add support for CA authentication in Keystone
+Use Puppet boolean for better consistency
+Update .fixtures.yml to use puppetlabs/inifile
+Update mysql allowed_hosts conditional statement
+Adding support for qpid in ceilometer, rspec for qpid part in ceilometer
+Remove duplicated fixtures
+Replace deprecated :rubygems source
+Switch deprecated rabbit_notifier to rpc_notifier
+Add auth_admin_prefix support for ceilometer::api
+Add puppet-lint to Gemfile
+Capitalize boolean values in config files
+Add .gitreview
+Update README
+Update existing puppetdoc & add missing puppetdoc
+Update tests to add DEFAULT/ to nova_config
+Fix notification relationship
+Update puppetdoc for ceilometer::keystone::auth
+Fix various puppet-lint errors and warnings
+Check that rabbit_hosts overrides rabbit_host|port
+Fix spec tests style
+Fix the ceilometer::client class
+Remove the dbsync file, it's not used anymore
+Ensure passwords/secrets are specified by user
+Fix lint errors, add some documentation
+Exclude 'master' branch from travis CI
+Fix ceilometer client package name for Debian
+Add DEFAULT section to nova_config
+inifile module now requires a section   * Added DEFAULT where missing is compute class
+Update fixtures location to use stackforge.
+Remove rabbit_host/rabbit_port config when rabbit_hosts is provided
+Add rabbit_hosts parameter
+Fix notification relationship with Service[nova-compute]
+Fix Ubuntu support for ceilometer::agent::compute
+Fix service dependencies and add inheritance from ceilometer
+Remove useless params
+Use implicit dependencies
+Add rspec tests for ceilometer::keystone::auth
+Add rspec tests for ceilometer::db::mysql
+Fix dependencies and various typos
+Add rspec tests for ceilometer::collector
+Add rspec tests for ceilometer::client
+Remove inheritance from ceilometer
+Partially add support for RedHat plateform
+Add keystone_tenant parameter for api
+Add rspec tests for ceilometer and ceilometer::api
+Remove ceilometer-dbsync override
+Fix dependency syntax in Modulefile
+Remove version from endpoint.
+Fix adding notification_driver parameters to the nova.conf
+Add required parameters to nova.conf
+Fix the auth_protocol keystone_authtoken parameter name
+Revert "Fix nova notifications"
+Fix order dependencies
+Fix nova notifications
+Fix glance exchange/topic to read notifications
+Fix groups memberships for the ceilometer user
+Agents, Api, Db & Collector classes inherit from ceilometer
+Add “log_dir” parameter
+The ceilometer user must be in the libvirt group
+Ensure services are started
+Update ceilometer user requirements
+Restart services when config file changes
+Rename default tenant to 'services' instead of 'service'
+Ceilometer_config requires package ceilometer-common
+Add user to localhost
+Fix $auth_user var name
+Forgot to pass the password also
+Only bother setting tenant_id if it's passed
+Fix duplicate opt
+Add authentication config opts
+Fix ownership/permissions on /etc/ceilometer/*
+Fix style
+Ensure the ceilometer user has ResellerAdmin role
+Add an example
+Update the dbsync_command
+Add the dbsync file, it's not yet in the packages
+Add the metering_secret parameter
+Default keystone_password to false to ensure error if not set
+Add admin user/tenant/password to authtoken config
+Remove wrong requirement for ceilometer-dbsync
+Fix incomplete subscribe declaration
+Fix user (group → gid)
+Fix the name of the ceilometer config provider
+Create ceilometer user/group
+Add ceilometer-dbsync and fix some db-related deps
+Refactoring/Style updates
+Move database settings to a different class
+Add dependencies into the Modulefile
+Finish moving Keystone Auth from init.pp to api.pp
+Move Keystone Auth from init.pp to api.pp
+Fix Licensing email address
+Add dependency
+Add dependency
+Fix tabs
+Remove useless test manifests
+The ceilometer.conf file needs the directory
+Fix files stuffs
+Delete []
+Move settings to init.pp
+Fix a typo
+Move ceilometer.conf file to init.pp
+Move Settings to init.pp
+Add mysql::python
+Add auth.pp for keystone
+Fix ceilometer::db::mysql class
+Fix ceilometer::db::mysql class
+Delete Notify Manifest
+Add Services Section
+Add Services Section
+Fix a typo
+Fix service class
+Add  in the class
+Add ceilometer_setting for type/provider
+Add ceilometer_setting for type/provider
+Add ceilometer_setting for type/provider
+Add ceilometer_setting for type/provider
+Update LICENSE & README
+Fix Typos
+Add Manifests
+Add tests
+Fix architecture & README
+First Commit

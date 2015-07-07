@@ -1,0 +1,18 @@
+{
+  "Gemfile": "325bbc39d5aa3b1708f3c33f1af3b956",
+  "LICENSE": "b3f8a01d8699078d82e8c3c992307517",
+  "README.md": "89301e3332f877eef80ea4d9e6ac22b2",
+  "Rakefile": "2ca4ff31c946a19edd44348fbfdc2aab",
+  "lib/puppet/parser/functions/os_any2array.rb": "f002c4a7168b4446719fcd4d0083320e",
+  "manifests/init.pp": "f00f38e43043c2775ef27c8e3c384be5",
+  "manifests/params.pp": "acc9a70679a6dd9d000f82d3472b1fc6",
+  "manifests/wsgi/apache.pp": "73228f34e9fea5332be55aeae7b8f6d9",
+  "metadata.json": "e5d9b1b490d7479652419731adf48d7c",
+  "spec/classes/horizon_init_spec.rb": "f9f96e032d79e79c56b32408a55a4de8",
+  "spec/classes/horizon_wsgi_apache_spec.rb": "992a461cb5e320c1dfeb7aaeab00db7c",
+  "spec/fixtures/override_local_settings.py.erb": "22aa66d649d89eaa8152e818b4a3dd88",
+  "spec/shared_examples.rb": "80bbd2763ab2702dc310473f3ee8cb18",
+  "spec/spec_helper.rb": "41d71ed92d01bb23d52397572e9b24bb",
+  "spec/unit/puppet/parser/functions/os_any2array_spec.rb": "25b3520e2acc469573c402f630d49968",
+  "templates/local_settings.py.erb": "f31208b88310279e541f457c69f5667d"
+}

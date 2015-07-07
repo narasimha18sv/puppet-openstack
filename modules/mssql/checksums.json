@@ -1,0 +1,9 @@
+{
+  "CHANGELOG": "504e5f34c468cb9a9742eb097fb03917",
+  "LICENSE": "b3f8a01d8699078d82e8c3c992307517",
+  "README.md": "168d937163f7c869daac611387feef54",
+  "manifests/init.pp": "af042133122a1e2d0e4fe80af8d38a9d",
+  "manifests/params.pp": "0bb6d002ef2beb518a04df455eb6f0df",
+  "metadata.json": "78a39a5af685deea2fa6a26a57a64724",
+  "templates/config.ini.erb": "0740ef754e9d21b7fd7e8337450c8e80"
+}

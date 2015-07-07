@@ -1,0 +1,156 @@
+{
+  "checksums": {
+    "lib/puppet/modules.rb": "ba5bc44916d2237f5ef555adaa91cf92",
+    "README.md": "eac348d7877f5c91fc5ebc40e3bb9bc4",
+    "lib/puppet/type/vc_host.rb": "a748390f58b14062c8aa83cfe195d974",
+    "lib/puppet/type/vc_cluster.rb": "ffcc374aba82460327bc545205ec1aa0",
+    "Modulefile": "8b1306a4bb0a56359136e24f886162d5",
+    "lib/puppet/modules/vcenter/provider_base.rb": "de52809405cb27e104dabd9f19de8a10",
+    "LICENSE": "b3f8a01d8699078d82e8c3c992307517",
+    "lib/puppet/modules/vcenter.rb": "24db4dfa3cf87a6a5fd710061aafa533",
+    "lib/puppet/provider/vc_cluster/default.rb": "dba30a92e8f0a6e1dffcdc5d7478b0fa",
+    "lib/puppet/modules/vcenter/type_base.rb": "d04e885aef558eb99c4ec20e33aa3237",
+    "lib/puppet/type/vc_folder.rb": "abc95209e06c4c04271e2ac4ed5a9feb",
+    "lib/puppet/type/vc_datacenter.rb": "1fd5d28445979cb686fcc02eaef92027",
+    "lib/puppet/provider/vc_folder/default.rb": "7d8516ebe1ad0f24f8b620da1016995f",
+    "manifests/init.pp": "c452b2a7d0f009054eff6b8674896e1a",
+    "lib/puppet/provider/vc_host/default.rb": "de0fcca983c4aac2426d0c90b199475d",
+    "lib/puppet/provider/vc_datacenter/default.rb": "2aac61cb87c900fef5d9b0c7628325cc"
+  },
+  "description": "VMware vCenter Puppet Module",
+  "author": "puppetlabs",
+  "source": "git@github.com:puppetlabs/puppetlabs-vcenter.git",
+  "version": "0.2.0",
+  "name": "puppetlabs-vcenter",
+  "dependencies": [
+    {
+      "name": "puppetlabs/registry",
+      "version_requirement": ">= 0.1.1"
+    },
+    {
+      "name": "puppetlabs/mssql",
+      "version_requirement": ">= 0.1.0"
+    }
+  ],
+  "project_page": "https://github.com/puppetlabs/puppetlabs-vcenter",
+  "types": [
+    {
+      "providers": [
+        {
+          "doc": "Manages vCenter Clusters.",
+          "name": "vc_cluster"
+        }
+      ],
+      "doc": "Manage vCenter Clusters.",
+      "properties": [
+        {
+          "doc": "  Valid values are `present`, `absent`.",
+          "name": "ensure"
+        }
+      ],
+      "parameters": [
+        {
+          "doc": "The path to the Cluster.",
+          "name": "path"
+        },
+        {
+          "doc": "The connectivity to vCenter.",
+          "name": "connection"
+        }
+      ],
+      "name": "vc_cluster"
+    },
+    {
+      "providers": [
+        {
+          "doc": "Manages vCenter Datacenters.",
+          "name": "vc_datacenter"
+        }
+      ],
+      "doc": "Manage vCenter Datacenters.",
+      "properties": [
+        {
+          "doc": "  Valid values are `present`, `absent`.",
+          "name": "ensure"
+        }
+      ],
+      "parameters": [
+        {
+          "doc": "The path to the Datacenter.",
+          "name": "path"
+        },
+        {
+          "doc": "The connectivity to vCenter.",
+          "name": "connection"
+        }
+      ],
+      "name": "vc_datacenter"
+    },
+    {
+      "providers": [
+        {
+          "doc": "Manages vCenter Folders.",
+          "name": "vc_folder"
+        }
+      ],
+      "doc": "Manage vCenter folders.",
+      "properties": [
+        {
+          "doc": "  Valid values are `present`, `absent`.",
+          "name": "ensure"
+        }
+      ],
+      "parameters": [
+        {
+          "doc": "The path to the folder.",
+          "name": "path"
+        },
+        {
+          "doc": "The connectivity to vCenter.",
+          "name": "connection"
+        }
+      ],
+      "name": "vc_folder"
+    },
+    {
+      "providers": [
+        {
+          "doc": "Manages vCenter hosts.",
+          "name": "vc_host"
+        }
+      ],
+      "doc": "Manage vCenter hosts.",
+      "properties": [
+        {
+          "doc": "  Valid values are `present`, `absent`.",
+          "name": "ensure"
+        },
+        {
+          "doc": "The path to the host.  Used when the host is created or moved.",
+          "name": "path"
+        }
+      ],
+      "parameters": [
+        {
+          "doc": "Host name (usually the ip address).",
+          "name": "name"
+        },
+        {
+          "doc": "Name of the user on the host.",
+          "name": "username"
+        },
+        {
+          "doc": "Password of the user on the host.",
+          "name": "password"
+        },
+        {
+          "doc": "The connectivity to vCenter.",
+          "name": "connection"
+        }
+      ],
+      "name": "vc_host"
+    }
+  ],
+  "summary": "vcenter puppet module",
+  "license": "Apache License Version 2.0"
+}

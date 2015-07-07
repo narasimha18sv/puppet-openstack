@@ -1,0 +1,14 @@
+{
+  "CHANGELOG.md": "33fde02157f73ad603e7623fbd3e50da",
+  "Gemfile": "0558b08f0d1b38c2aaeff960cefd565a",
+  "LICENSE": "b3f8a01d8699078d82e8c3c992307517",
+  "README.md": "95e1af427895ef14bccae12b166ef54a",
+  "Rakefile": "fce56e852453b3a50ef1c6bf368deba5",
+  "lib/puppet/provider/dism/dism.rb": "55a7b9f07486ed2a61a3cb6068e339d5",
+  "lib/puppet/type/dism.rb": "69eabddf6f1cc45b8817b964682247bf",
+  "metadata.json": "25268dfc522063b5a46f37b8997195b5",
+  "spec/fixtures/dism_get_features": "0041d5fd618655cf4863975e83c868cd",
+  "spec/fixtures/site.pp": "d41d8cd98f00b204e9800998ecf8427e",
+  "spec/spec_helper.rb": "c5d3c509b926c7eb6f1ffaf7f9af5f6c",
+  "spec/unit/provider/dism_spec.rb": "0902ea42ec81d670403ef8d2dd7d9316"
+}

@@ -1,0 +1,4 @@
+openstack::config::host_ip: '10.10.10.10'
+openstack::config::host_username: 'root'
+openstack::config::host_password: 'root'
+openstack::config::cluster_name: 'esxi_cluster'
