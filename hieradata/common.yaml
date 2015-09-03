@@ -108,7 +108,7 @@ openstack::nova::password: 'nova'
 openstack::neutron::password: 'neutron'
 openstack::neutron::shared_secret: 'metadata'
 openstack::neutron::core_plugin: 'ml2'
-openstack::neutron::service_plugins: ['router', 'firewall', 'lbaas', 'vpnaas', 'metering']
+openstack::neutron::service_plugins: ['router']
 
 ######## Ceilometer
 openstack::ceilometer::address::management: 'xx.xx.xx.xx'
