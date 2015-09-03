@@ -1,14 +1,14 @@
 openstack::region: 'openstack'
 
 ######## Networks
-openstack::network::api: '172.16.59.0/24'
-openstack::network::external: '172.16.59.0/24'
-openstack::network::management: '172.16.13.0/24'
-openstack::network::data: '172.16.59.0/24'
+openstack::network::api: 'xx.xx.xx.xx'
+openstack::network::external: 'xx.xx.xx.xx'
+openstack::network::management: 'xx.xx.xx.xx'
+openstack::network::data: 'xx.xx.xx.xx'
 
-openstack::network::external::ippool::start: 172.16.59.100
-openstack::network::external::ippool::end: 172.16.59.200
-openstack::network::external::gateway: 172.16.59.1
+openstack::network::external::ippool::start: xx.xx.xx.xx
+openstack::network::external::ippool::end: xx.xx.xx.xx
+openstack::network::external::gateway: xx.xx.xx.xx
 openstack::network::external::dns: 8.8.8.8
 
 ######## Private Neutron Network
@@ -17,19 +17,17 @@ openstack::network::neutron::private: '10.0.0.0/24'
 
 ######## Fixed IPs (controllers)
 
-openstack::controller::address::api: '172.16.59.132'
-openstack::controller::address::management: '172.16.59.132'
-openstack::storage::address::api: '172.16.59.132'
-openstack::storage::address::management: '172.16.59.132'
-openstack::config::storage_drive: 'sdb'
-openstack::config::storage_partition_type: 'ext3'
+openstack::controller::address::api: 'xx.xx.xx.xx'
+openstack::controller::address::management: 'xx.xx.xx.xx'
+openstack::storage::address::api: 'xx.xx.xx.xx'
+openstack::storage::address::management: 'xx.xx.xx.xx'
 
 
 ######## Database
-openstack::mysql::host_address: '172.16.59.132'
+openstack::mysql::host_address: 'xx.xx.xx.xx'
 openstack::mysql::root_password: 'root'
 openstack::mysql::service_password: 'root'
-openstack::mysql::allowed_hosts: ['localhost', '127.0.0.1', '172.16.59.%']
+openstack::mysql::allowed_hosts: ['localhost', '127.0.0.1', 'xx.xx.xx.xx']
 
 openstack::mysql::keystone::user: 'keystone'
 openstack::mysql::keystone::pass: 'keystone'
@@ -39,7 +37,7 @@ openstack::mysql::cinder::pass: 'cinder'
 
 openstack::mysql::glance::user: 'glance'
 openstack::mysql::glance::pass: 'glance'
-openstack::glance::api_servers: ['172.16.59.132:9292']
+openstack::glance::api_servers: ['xx.xx.xx.xx:9292']
 
 openstack::mysql::nova::user: 'nova'
 openstack::mysql::nova::pass: 'nova'
@@ -54,14 +52,14 @@ openstack::mysql::heat::pass: 'heat'
 
 openstack::rabbitmq::user: 'openstack'
 openstack::rabbitmq::password: 'openstack'
-openstack::rabbitmq::hosts: ['172.16.59.132:5672']
+openstack::rabbitmq::hosts: ['xx.xx.xx.xx:5672']
 openstack::config::rabbitmq_cluster: ['client1']
 
 ######## Keystone
 
-openstack::keystone::admin_token: 'sosp-kyl'
+openstack::keystone::admin_token: 'ADMIN'
 openstack::keystone::admin_email: 'narasimha18sv@gmail.com'
-openstack::keystone::admin_password: 'fyby-tet'
+openstack::keystone::admin_password: 'admin'
 
 openstack::keystone::tenants:
     "test":
@@ -113,7 +111,7 @@ openstack::neutron::core_plugin: 'ml2'
 openstack::neutron::service_plugins: ['router', 'firewall', 'lbaas', 'vpnaas', 'metering']
 
 ######## Ceilometer
-openstack::ceilometer::address::management: '172.16.59.132'
+openstack::ceilometer::address::management: 'xx.xx.xx.xx'
 openstack::ceilometer::mongo::username: 'mongo'
 openstack::ceilometer::mongo::password: 'mongosecretkey123'
 openstack::ceilometer::password: 'ceilometer'
