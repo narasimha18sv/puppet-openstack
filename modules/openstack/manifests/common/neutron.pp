@@ -9,9 +9,6 @@ class openstack::common::neutron {
   $data_network = $::openstack::config::network_data
   $data_address = ip_for_network($data_network)
 
-  # neutron auth depends upon a keystone configuration
-  include ::openstack::common::keystone
-
   class { '::neutron':
     rabbit_host           => $controller_management_address,
     core_plugin           => $::openstack::config::neutron_core_plugin,
