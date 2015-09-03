@@ -38,6 +38,9 @@ describe 'nova::compute::libvirt' do
       it { should contain_nova_config('libvirt/virt_type').with_value('kvm')}
       it { should contain_nova_config('libvirt/cpu_mode').with_value('host-model')}
       it { should contain_nova_config('libvirt/disk_cachemodes').with_ensure('absent')}
+      it { should contain_nova_config('libvirt/inject_password').with_value(false)}
+      it { should contain_nova_config('libvirt/inject_key').with_value(false)}
+      it { should contain_nova_config('libvirt/inject_partition').with_value(-2)}
       it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('127.0.0.1')}
       it { should contain_nova_config('DEFAULT/remove_unused_base_images').with_ensure('absent')}
       it { should contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}
@@ -98,6 +101,17 @@ describe 'nova::compute::libvirt' do
         it { should contain_file_line('/etc/default/libvirt-bin libvirtd opts').with(:line => 'libvirtd_opts="-d -l"') }
       end
 
+      context 'with vncserver_listen set to ::0' do
+        let :params do
+          { :vncserver_listen  => '::0',
+            :migration_support => true }
+        end
+
+        it { should contain_class('nova::migration::libvirt')}
+        it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('::0')}
+        it { should contain_file_line('/etc/default/libvirt-bin libvirtd opts').with(:line => 'libvirtd_opts="-d -l"') }
+      end
+
       context 'with vncserver_listen not set to 0.0.0.0' do
         let :params do
           { :vncserver_listen  => '127.0.0.1',
@@ -105,7 +119,7 @@ describe 'nova::compute::libvirt' do
         end
 
         it { expect { should contain_class('nova::compute::libvirt') }.to \
-          raise_error(Puppet::Error, /For migration support to work, you MUST set vncserver_listen to '0.0.0.0'/) }
+          raise_error(Puppet::Error, /For migration support to work, you MUST set vncserver_listen to '0.0.0.0' or '::0'/) }
       end
 
       context 'with custom libvirt service name on Debian plateforms' do
@@ -167,6 +181,9 @@ describe 'nova::compute::libvirt' do
 
       it { should contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
       it { should contain_nova_config('libvirt/virt_type').with_value('kvm')}
+      it { should contain_nova_config('libvirt/inject_password').with_value(false)}
+      it { should contain_nova_config('libvirt/inject_key').with_value(false)}
+      it { should contain_nova_config('libvirt/inject_partition').with_value(-2)}
       it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('127.0.0.1')}
       it { should contain_nova_config('DEFAULT/remove_unused_base_images').with_ensure('absent')}
       it { should contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}

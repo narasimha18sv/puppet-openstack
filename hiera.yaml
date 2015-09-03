@@ -4,5 +4,6 @@
 :yaml:
   :datadir: /etc/puppet/hieradata
 :hierarchy:
+  - ha
   - common
   - vmware

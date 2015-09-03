@@ -1,0 +1,5 @@
+controller01_hostname: 'controller1'
+controller02_hostname: 'controller2'
+controller01_ip: '192.168.15.190'
+controller02_ip: '192.168.15.186'
+

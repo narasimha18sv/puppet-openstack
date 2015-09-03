@@ -25,10 +25,8 @@ class nova::compute::neutron (
   }
 
   nova_config {
-#    'libvirt/vif_driver': value => $libvirt_vif_driver;
-    'libvirt/vif_driver': ensure => absent;
+    'libvirt/vif_driver': value => $libvirt_vif_driver;
   }
-
 
   if $libvirt_vif_driver == 'nova.virt.libvirt.vif.LibvirtGenericVIFDriver' and $force_snat_range {
     # Validate ip and mask for force_snat_range

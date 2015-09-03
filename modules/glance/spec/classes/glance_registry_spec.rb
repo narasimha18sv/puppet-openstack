@@ -28,6 +28,7 @@ describe 'glance::registry' do
       :keystone_user          => 'glance',
       :keystone_password      => 'ChangeMe',
       :purge_config           => false,
+      :sync_db                => true,
     }
   end
 
@@ -49,6 +50,7 @@ describe 'glance::registry' do
       :keystone_tenant        => 'admin',
       :keystone_user          => 'admin',
       :keystone_password      => 'ChangeMe',
+      :sync_db                => false,
     }
   ].each do |param_set|
 
@@ -77,11 +79,18 @@ describe 'glance::registry' do
         if param_hash[:enabled]
           should contain_exec('glance-manage db_sync').with(
             'path'        => '/usr/bin',
+            'command'     => 'glance-manage --config-file=/etc/glance/glance-registry.conf db_sync',
             'refreshonly' => true,
             'logoutput'   => 'on_failure',
             'subscribe'   => ['Package[glance-registry]', 'File[/etc/glance/glance-registry.conf]'],
             'notify'      => 'Service[glance-registry]'
           )
+        end
+      end
+      it 'should not sync the db if sync_db is set to false' do
+
+        if param_hash[:enabled] and !param_hash[:sync_db]
+          is_expected.not_to contain_exec('glance-manage db_sync')
         end
       end
       it 'should configure itself' do
@@ -310,9 +319,18 @@ describe 'glance::registry' do
     let :facts do
       { :osfamily => 'Debian' }
     end
-    let(:params) { default_params }
 
-    it {should contain_package('glance-registry')}
+    # We only test this on Debian platforms, since on RedHat there isn't a
+    # separate package for glance registry.
+    ['present', 'latest'].each do |package_ensure|
+      context "with package_ensure '#{package_ensure}'" do
+        let(:params) { default_params.merge({ :package_ensure => package_ensure }) }
+        it { should contain_package('glance-registry').with(
+            :ensure => package_ensure,
+            :tag    => ['openstack']
+        )}
+      end
+    end
   end
 
   describe 'on RedHat platforms' do

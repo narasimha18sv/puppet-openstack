@@ -210,6 +210,21 @@ Starting in Apache 2.2.16, HTTPD supports [FallbackResource](https://httpd.apach
     }
 ```
 
+To set up a virtual host with filter rules
+
+```puppet
+    apache::vhost { 'subdomain.loc':
+      port             => '80',
+      filters          => [
+        'FilterDeclare  COMPRESS',
+        'FilterProvider COMPRESS DEFLATE resp=Content-Type $text/html',
+        'FilterChain    COMPRESS',
+        'FilterProtocol COMPRESS DEFLATE change=yes;byteranges=no',
+      ],
+      docroot          => '/var/www/html',
+    }
+```
+
 Please note that the 'disabled' argument to FallbackResource is only supported since Apache 2.2.24.
 
 See a list of all [virtual host parameters](#defined-type-apachevhost). See an extensive list of [virtual host examples](#virtual-host-examples).
@@ -475,6 +490,9 @@ Determines whether the HTTPD service state is managed by Puppet . Defaults to 't
 
 Determines whether the HTTPD service restart command should be anything other than the default managed by Puppet.  Defaults to undef.
 
+#####`timeout`
+
+Sets the amount of seconds the server will wait for certain events before failing a request. Defaults to 120.
 
 #####`trace_enable`
 
@@ -666,14 +684,44 @@ These are the default settings:
 
 ```puppet
   class {'apache::mod::geoip':
-    $enable  => false,
-    $db_file => '/usr/share/GeoIP/GeoIP.dat',
-    $flag    => 'Standard',
-    $output  => 'All',
+    enable  => false,
+    db_file => '/usr/share/GeoIP/GeoIP.dat',
+    flag    => 'Standard',
+    output  => 'All',
   }
 ```
 
-The parameter `db_file` can be a single directory or a hash of directories.
+#####`enable`
+
+Boolean. Enable or Disable mod_geoip globally. Defaults to false.
+
+#####`db_file`
+
+The full path to your GeoIP database file. Defaults to `/usr/share/GeoIP/GeoIP.dat`. This parameter optionally takes an array of paths for multiple GeoIP database files.
+
+#####`flag`
+
+GeoIP Flag. Defaults to 'Standard'.
+
+#####`output`
+
+Defines which output variables to use. Defaults to 'All'.
+
+#####`enable_utf8`
+
+Boolean. Changes the output from ISO-8859-1 (Latin-1) to UTF-8.
+
+#####`scan_proxy_headers`
+
+Boolean. Enables the GeoIPScanProxyHeaders option. More information can be found [here](http://dev.maxmind.com/geoip/legacy/mod_geoip2/#Proxy-Related_Directives).
+
+#####`scan_proxy_header_field`
+
+Specifies which header that mod_geoip should look at to determine the client's IP address.
+
+#####`use_last_xforwarededfor_ip`
+
+Boolean. If a comma-separated list of IP addresses is found, use the last IP address for the client's IP.
 
 ####Class: `apache::mod::info`
 
@@ -823,6 +871,7 @@ Installs Apache SSL capabilities and uses the ssl.conf.erb template. These are t
       ssl_compression         => false,
       ssl_cryptodevice        => 'builtin',
       ssl_options             => [ 'StdEnvVars' ],
+      ssl_openssl_conf_cmd    => undef,
       ssl_cipher              => 'HIGH:MEDIUM:!aNULL:!MD5',
       ssl_honorcipherorder    => 'On',
       ssl_protocol            => [ 'all', '-SSLv2', '-SSLv3' ],
@@ -1237,6 +1286,21 @@ Specifies if the vhost file is present or absent. Defaults to 'present'.
 
 Sets the [FallbackResource](http://httpd.apache.org/docs/current/mod/mod_dir.html#fallbackresource) directive, which specifies an action to take for any URL that doesn't map to anything in your filesystem and would otherwise return 'HTTP 404 (Not Found)'. Valid values must either begin with a / or be 'disabled'. Defaults to 'undef'.
 
+#####`filters`
+
+[Filters](http://httpd.apache.org/docs/2.2/mod/mod_filter.html) enable smart, context-sensitive configuration of output content filters.
+
+```puppet
+    apache::vhost { "$::fqdn":
+      filters => [
+        'FilterDeclare   COMPRESS',
+        'FilterProvider  COMPRESS DEFLATE resp=Content-Type $text/html',
+        'FilterChain     COMPRESS',
+        'FilterProtocol  COMPRESS DEFLATE change=yes;byteranges=no',
+      ],
+    }
+```
+
 #####`headers`
 
 Adds lines to replace, merge, or remove response headers. See [Header](http://httpd.apache.org/docs/current/mod/mod_headers.html#header) for more information. Can be an array. Defaults to 'undef'.
@@ -1497,7 +1561,6 @@ Modifies collected [request headers](http://httpd.apache.org/docs/current/mod/mo
       ],
     }
 ```
-
 #####`rewrites`
 
 Creates URL rewrite rules. Expects an array of hashes, and the hash keys can be any of 'comment', 'rewrite_base', 'rewrite_cond', 'rewrite_rule' or 'rewrite_map'. Defaults to 'undef'.
@@ -2250,6 +2313,10 @@ An array:
       ssl_options => [ '+StrictRequire', '+ExportCertData' ],
     }
 ```
+
+#####`ssl_openssl_conf_cmd`
+
+Sets the [SSLOpenSSLConfCmd](http://httpd.apache.org/docs/current/mod/mod_ssl.html#sslopensslconfcmd) directive, which provides direct configuration of OpenSSL parameters. Defaults to 'undef'.
 
 #####`ssl_proxyengine`
 

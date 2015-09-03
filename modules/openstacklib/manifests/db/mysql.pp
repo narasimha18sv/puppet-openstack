@@ -26,7 +26,7 @@
 #
 #  [*collate*]
 #    The collate to use for the database;
-#    string; optional; default to 'utf8_unicode_ci'
+#    string; optional; default to 'utf8_general_ci'
 #
 #  [*allowed_hosts*]
 #    Additional hosts that are allowed to access this database;
@@ -42,7 +42,7 @@ define openstacklib::db::mysql (
   $user           = $title,
   $host           = '127.0.0.1',
   $charset        = 'utf8',
-  $collate        = 'utf8_unicode_ci',
+  $collate        = 'utf8_general_ci',
   $allowed_hosts  = [],
   $privileges     = 'ALL',
 ) {
@@ -54,7 +54,7 @@ define openstacklib::db::mysql (
     charset => $charset,
     collate => $collate,
     #require => [ Class['mysql::server'], Class['mysql::client'] ],
-    require => Class['mysql::client'],
+    require => [ Class['mysql::client'] ],
   }
 
   $allowed_hosts_list = unique(concat(any2array($allowed_hosts), [$host]))

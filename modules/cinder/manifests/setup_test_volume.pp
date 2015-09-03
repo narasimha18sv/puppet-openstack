@@ -37,26 +37,22 @@ class cinder::setup_test_volume(
     command => "dd if=/dev/zero of=\"${volume_path}/${volume_name}\" bs=1 count=0 seek=${size}",
     path    => ['/bin','/usr/bin','/sbin','/usr/sbin'],
     unless  => "stat ${volume_path}/${volume_name}",
-    logoutput => true,
   } ~>
 
   exec { "losetup ${loopback_device} ${volume_path}/${volume_name}":
     path        => ['/bin','/usr/bin','/sbin','/usr/sbin'],
     refreshonly => true,
-    logoutput => true,
   } ~>
 
   exec { "pvcreate ${loopback_device}":
     path        => ['/bin','/usr/bin','/sbin','/usr/sbin'],
     unless      => "pvdisplay | grep ${volume_name}",
     refreshonly => true,
-    logoutput => true,
   } ~>
 
   exec { "vgcreate ${volume_name} ${loopback_device}":
     path        => ['/bin','/usr/bin','/sbin','/usr/sbin'],
     refreshonly => true,
-    logoutput => true,
   }
 
 }

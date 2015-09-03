@@ -1,7 +1,6 @@
 class openstack::resources::connectors {
 
-#  $management_address = $::openstack::config::controller_address_management
-  $management_address = $::openstack::config::mysql_host_address
+  $management_address = $::openstack::config::controller_address_management
   $password = $::openstack::config::mysql_service_password
 
   # keystone

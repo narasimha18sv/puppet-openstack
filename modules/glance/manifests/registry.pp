@@ -7,6 +7,11 @@
 #  [*keystone_password*]
 #    (required) The keystone password for administrative user
 #
+#  [*package_ensure*]
+#    (optional) Ensure state for package. Defaults to 'present'.  On RedHat
+#    platforms this setting is ignored and the setting from the glance class is
+#    used because there is only one glance package.
+#
 #  [*verbose*]
 #    (optional) Enable verbose logs (true|false). Defaults to false.
 #
@@ -109,11 +114,16 @@
 #   (optional) CA certificate file to use to verify connecting clients
 #   Defaults to false, not set
 #
+# [*sync_db*]
+#   (Optional) Run db sync on the node.
+#   Defaults to true
+#
 #  [*mysql_module*]
 #  (optional) Deprecated. Does nothing.
 #
 class glance::registry(
   $keystone_password,
+  $package_ensure        = 'present',
   $verbose               = false,
   $debug                 = false,
   $bind_host             = '0.0.0.0',
@@ -140,6 +150,7 @@ class glance::registry(
   $cert_file             = false,
   $key_file              = false,
   $ca_file               = false,
+  $sync_db               = true,
   # DEPRECATED PARAMETERS
   $mysql_module          = undef,
   $sql_idle_timeout      = false,
@@ -153,7 +164,12 @@ class glance::registry(
   }
 
   if ( $glance::params::api_package_name != $glance::params::registry_package_name ) {
-    ensure_packages([$glance::params::registry_package_name])
+    ensure_packages( [$glance::params::registry_package_name],
+      {
+        ensure => $package_ensure,
+        tag    => ['openstack'],
+      }
+    )
   }
 
   Package[$glance::params::registry_package_name] -> File['/etc/glance/']
@@ -197,11 +213,10 @@ class glance::registry(
       fail("Invalid db connection ${database_connection_real}")
     }
     glance_registry_config {
+      'database/sqlite_db': ensure => absent;
       'database/connection':   value => $database_connection_real, secret => true;
       'database/idle_timeout': value => $database_idle_timeout_real;
     }
-    # code to comment out sqlite db connection
-    glance_registry_config { 'database/sqlite_db': ensure => absent; }
   }
 
   glance_registry_config {
@@ -210,18 +225,34 @@ class glance::registry(
     'DEFAULT/bind_host': value => $bind_host;
     'DEFAULT/bind_port': value => $bind_port;
   }
-  # updated code from puppet-glance master 
-  if $identity_uri {
-    glance_registry_config { 'keystone_authtoken/identity_uri': value => $identity_uri; }
-  } else {
-    glance_registry_config { 'keystone_authtoken/identity_uri': ensure => absent; }
-  }
 
   if $auth_uri {
     glance_registry_config { 'keystone_authtoken/auth_uri': value => $auth_uri; }
   } else {
     glance_registry_config { 'keystone_authtoken/auth_uri': value => "${auth_protocol}://${auth_host}:5000/"; }
   }
+  glance_registry_config { 'DEFAULT/qpid_notification_exchange': ensure => absent }
+  glance_registry_config { 'DEFAULT/qpid_notification_topic': ensure => absent }
+  glance_registry_config { 'DEFAULT/qpid_hostname': ensure => absent }
+  glance_registry_config { 'DEFAULT/qpid_port': ensure => absent }
+  glance_registry_config { 'DEFAULT/qpid_username': ensure => absent }
+  glance_registry_config { 'DEFAULT/qpid_password': ensure => absent }
+  glance_registry_config { 'DEFAULT/qpid_sasl_mechanisms': ensure => absent }
+  glance_registry_config { 'DEFAULT/qpid_reconnect_timeout': ensure => absent }
+  glance_registry_config { 'DEFAULT/qpid_reconnect_limit': ensure => absent }
+  glance_registry_config { 'DEFAULT/qpid_reconnect_interval_min': ensure => absent }
+  glance_registry_config { 'DEFAULT/qpid_reconnect_interval_max': ensure => absent }
+  glance_registry_config { 'DEFAULT/qpid_reconnect_interval': ensure => absent }
+  glance_registry_config { 'DEFAULT/qpid_heartbeat': ensure => absent }
+  glance_registry_config { 'DEFAULT/qpid_protocol': ensure => absent }
+  glance_registry_config { 'DEFAULT/qpid_tcp_nodelay': ensure => absent }
+  # code taken from master repo of puppet-glance
+  if $identity_uri {
+    glance_registry_config { 'keystone_authtoken/identity_uri': value => $identity_uri; }
+  } else {
+    glance_registry_config { 'keystone_authtoken/identity_uri': ensure => absent; }
+  }
+
 
   # auth config
   glance_registry_config {
@@ -261,23 +292,6 @@ class glance::registry(
       'keystone_authtoken/admin_password'   : value => $keystone_password, secret => true;
     }
   }
-  # comment out the default qpid configurations
-
-  glance_registry_config { 'DEFAULT/qpid_notification_exchange': ensure => absent }
-  glance_registry_config { 'DEFAULT/qpid_notification_topic': ensure => absent }
-  glance_registry_config { 'DEFAULT/qpid_hostname': ensure => absent }
-  glance_registry_config { 'DEFAULT/qpid_port': ensure => absent }
-  glance_registry_config { 'DEFAULT/qpid_username': ensure => absent }
-  glance_registry_config { 'DEFAULT/qpid_password': ensure => absent }
-  glance_registry_config { 'DEFAULT/qpid_sasl_mechanisms': ensure => absent }
-  glance_registry_config { 'DEFAULT/qpid_reconnect_timeout': ensure => absent }
-  glance_registry_config { 'DEFAULT/qpid_reconnect_limit': ensure => absent }
-  glance_registry_config { 'DEFAULT/qpid_reconnect_interval_min': ensure => absent }
-  glance_registry_config { 'DEFAULT/qpid_reconnect_interval_max': ensure => absent }
-  glance_registry_config { 'DEFAULT/qpid_reconnect_interval': ensure => absent }
-  glance_registry_config { 'DEFAULT/qpid_heartbeat': ensure => absent }
-  glance_registry_config { 'DEFAULT/qpid_protocol': ensure => absent }
-  glance_registry_config { 'DEFAULT/qpid_tcp_nodelay': ensure => absent }
 
   # SSL Options
   if $cert_file {
@@ -352,15 +366,17 @@ class glance::registry(
 
   if $manage_service {
     if $enabled {
-      Exec['glance-manage db_sync'] ~> Service['glance-registry']
+      if $sync_db {
+        Exec['glance-manage db_sync'] ~> Service['glance-registry']
 
-      exec { 'glance-manage db_sync':
-        command     => $::glance::params::db_sync_command,
-        path        => '/usr/bin',
-        user        => 'glance',
-        refreshonly => true,
-        logoutput   => on_failure,
-        subscribe   => [Package[$glance::params::registry_package_name], File['/etc/glance/glance-registry.conf']],
+        exec { 'glance-manage db_sync':
+          command     => $::glance::params::db_sync_command,
+          path        => '/usr/bin',
+          user        => 'glance',
+          refreshonly => true,
+          logoutput   => on_failure,
+          subscribe   => [Package[$glance::params::registry_package_name], File['/etc/glance/glance-registry.conf']],
+        }
       }
       $service_ensure = 'running'
     } else {

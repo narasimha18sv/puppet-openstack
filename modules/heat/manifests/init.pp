@@ -70,7 +70,7 @@
 #   (Optional) SSL version to use (valid only if SSL enabled).
 #   Valid values are TLSv1, SSLv23 and SSLv3. SSLv2 may be
 #   available on some distributions.
-#   Defaults to 'SSLv3'
+#   Defaults to 'TLSv1'
 #
 # [*amqp_durable_queues*]
 #   (Optional) Use durable queues in amqp.
@@ -142,6 +142,12 @@
 #   (Optional) Syslog facility to receive log lines.
 #   Defaults to LOG_USER.
 #
+# [*flavor*]
+#   (optional) Specifies the Authentication method.
+#   Set to 'standalone' to get Heat to work with a remote OpenStack
+#   Tested versions include 0.9 and 2.2
+#   Defaults to undef
+#
 # === Deprecated ParameterS
 #
 # [*mysql_module*]
@@ -174,7 +180,7 @@ class heat(
   $kombu_ssl_ca_certs          = undef,
   $kombu_ssl_certfile          = undef,
   $kombu_ssl_keyfile           = undef,
-  $kombu_ssl_version           = 'SSLv3',
+  $kombu_ssl_version           = 'TLSv1',
   $amqp_durable_queues         = false,
   $qpid_hostname               = 'localhost',
   $qpid_port                   = 5672,
@@ -193,6 +199,7 @@ class heat(
   $database_idle_timeout       = 3600,
   $use_syslog                  = false,
   $log_facility                = 'LOG_USER',
+  $flavor                      = undef,
   #Deprecated parameters
   $mysql_module                = undef,
   $sql_connection              = undef,
@@ -437,4 +444,9 @@ class heat(
     }
   }
 
+  if $flavor {
+    heat_config { 'paste_deploy/flavor': value => $flavor; }
+  } else {
+    heat_config { 'paste_deploy/flavor': ensure => absent; }
+  }
 }

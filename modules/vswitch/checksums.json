@@ -1,11 +1,11 @@
 {
-  "Gemfile": "325bbc39d5aa3b1708f3c33f1af3b956",
+  "Gemfile": "d4d7764cdbc3efe027de184f3f0dc215",
   "LICENSE": "1dece7821bf3fd70fe1309eaa37d52a2",
-  "README.md": "992073e539ee637a28ea206f6160d3e4",
+  "README.md": "23a2e5c93039cc0cc3853db4d5f32d42",
   "Rakefile": "e64db1215b97906c4b9d4b4074a581e6",
   "lib/puppet/provider/vs_bridge/ovs.rb": "763685a7c8b104d2c49c4383ff049e2d",
   "lib/puppet/provider/vs_port/ovs.rb": "f5eee11043a88b97c11fa1494c358d85",
-  "lib/puppet/provider/vs_port/ovs_redhat.rb": "61cdef527d191b70143212aa71237dd9",
+  "lib/puppet/provider/vs_port/ovs_redhat.rb": "90daefd00383792a0803b238cd867cca",
   "lib/puppet/provider/vs_port/ovs_redhat_el6.rb": "d2eb749b1b8999b15cb1a09f0196703c",
   "lib/puppet/type/vs_bridge.rb": "20c831445148365dc964c26a1b6a7bba",
   "lib/puppet/type/vs_port.rb": "16fe96502fe7aa6fbb61d54c210043ee",
@@ -13,7 +13,7 @@
   "manifests/init.pp": "91bb614ff5526fb0628ae2578f5413f1",
   "manifests/ovs.pp": "49b76ee45bd50385371f36774ac69b69",
   "manifests/params.pp": "db5d7504251b8196cada65ec1b633344",
-  "metadata.json": "8d7803c6cb47ee28ba94532b003f4c7b",
+  "metadata.json": "61e5146f2473bdf16deab0977f0ffd76",
   "spec/classes/vswitch_ovs_spec.rb": "49f8c0f41f35592c7e83cdb44fe5b4fa",
   "spec/spec_helper.rb": "0db89c9a486df193c0e40095422e19dc",
   "spec/unit/puppet/lib/type/vs_bridge_spec.rb": "14c0c2b44d97724753efcc32858942ce"

@@ -1,7 +1,7 @@
 openstacklib
 ============
 
-5.0.0 - 2014.2.0 - Juno
+5.1.0 - 2014.2 - Juno
 #### Table of Contents
 
 1. [Overview - What is the openstacklib module?](#overview)
@@ -110,7 +110,7 @@ string; optional; default to 'utf8'
 
 #####`collate`
 The collate to use for the database;
-string; optional; default to 'utf8_unicode_ci'
+string; optional; default to 'utf8_general_ci'
 
 #####`allowed_hosts`
 Additional hosts that are allowed to access this database;
@@ -258,6 +258,13 @@ Puppet Module :: OpenStack Version :: OpenStack Codename
 
 Release Notes
 -------------
+
+**5.1.0**
+
+* Update .gitreview file for project rename
+* Adding augeas insertion check
+* MySQL: change default MySQL collate to utf8_general_ci
+* spec: pin rspec-puppet to 1.0.1
 
 **5.0.0**
 

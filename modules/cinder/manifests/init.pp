@@ -50,7 +50,7 @@
 #   (optional) SSL version to use (valid only if SSL enabled).
 #   Valid values are TLSv1, SSLv23 and SSLv3. SSLv2 may be
 #   available on some distributions.
-#   Defaults to 'SSLv3'
+#   Defaults to 'TLSv1'
 #
 # [amqp_durable_queues]
 #   Use durable queues in amqp.
@@ -111,7 +111,7 @@ class cinder (
   $database_max_retries        = '10',
   $database_retry_interval     = '10',
   $database_max_overflow       = undef,
-  $rpc_backend                 = 'cinder.openstack.common.rpc.impl_kombu',
+  $rpc_backend                 = 'rabbit',
   $control_exchange            = 'openstack',
   $rabbit_host                 = '127.0.0.1',
   $rabbit_port                 = 5672,
@@ -123,7 +123,7 @@ class cinder (
   $kombu_ssl_ca_certs          = undef,
   $kombu_ssl_certfile          = undef,
   $kombu_ssl_keyfile           = undef,
-  $kombu_ssl_version           = 'SSLv3',
+  $kombu_ssl_version           = 'TLSv1',
   $amqp_durable_queues         = false,
   $qpid_hostname               = 'localhost',
   $qpid_port                   = '5672',
@@ -190,18 +190,6 @@ class cinder (
     }
   }
 
-  if $rabbit_use_ssl {
-    if !$kombu_ssl_ca_certs {
-      fail('The kombu_ssl_ca_certs parameter is required when rabbit_use_ssl is set to true')
-    }
-    if !$kombu_ssl_certfile {
-      fail('The kombu_ssl_certfile parameter is required when rabbit_use_ssl is set to true')
-    }
-    if !$kombu_ssl_keyfile {
-      fail('The kombu_ssl_keyfile parameter is required when rabbit_use_ssl is set to true')
-    }
-  }
-
   # this anchor is used to simplify the graph between cinder components by
   # allowing a resource to serve as a point where the configuration of cinder begins
   anchor { 'cinder-start': }
@@ -228,7 +216,7 @@ class cinder (
     require => Package['cinder'],
   }
 
-  if $rpc_backend == 'cinder.openstack.common.rpc.impl_kombu' {
+  if $rpc_backend == 'rabbit' {
 
     if ! $rabbit_password {
       fail('Please specify a rabbit_password parameter.')
@@ -246,6 +234,8 @@ class cinder (
     if $rabbit_hosts {
       cinder_config { 'DEFAULT/rabbit_hosts':     value => join($rabbit_hosts, ',') }
       cinder_config { 'DEFAULT/rabbit_ha_queues': value => true }
+      cinder_config { 'DEFAULT/rabbit_host':      ensure => absent }
+      cinder_config { 'DEFAULT/rabbit_port':      ensure => absent }
     } else {
       cinder_config { 'DEFAULT/rabbit_host':      value => $rabbit_host }
       cinder_config { 'DEFAULT/rabbit_port':      value => $rabbit_port }
@@ -254,11 +244,24 @@ class cinder (
     }
 
     if $rabbit_use_ssl {
-      cinder_config {
-        'DEFAULT/kombu_ssl_ca_certs': value => $kombu_ssl_ca_certs;
-        'DEFAULT/kombu_ssl_certfile': value => $kombu_ssl_certfile;
-        'DEFAULT/kombu_ssl_keyfile':  value => $kombu_ssl_keyfile;
-        'DEFAULT/kombu_ssl_version':  value => $kombu_ssl_version;
+      cinder_config { 'DEFAULT/kombu_ssl_version': value => $kombu_ssl_version }
+
+      if $kombu_ssl_ca_certs {
+        cinder_config { 'DEFAULT/kombu_ssl_ca_certs': value => $kombu_ssl_ca_certs }
+      } else {
+        cinder_config { 'DEFAULT/kombu_ssl_ca_certs': ensure => absent}
+      }
+
+      if $kombu_ssl_certfile {
+        cinder_config { 'DEFAULT/kombu_ssl_certfile': value => $kombu_ssl_certfile }
+      } else {
+        cinder_config { 'DEFAULT/kombu_ssl_certfile': ensure => absent}
+      }
+
+      if $kombu_ssl_keyfile {
+        cinder_config { 'DEFAULT/kombu_ssl_keyfile': value => $kombu_ssl_keyfile }
+      } else {
+        cinder_config { 'DEFAULT/kombu_ssl_keyfile': ensure => absent}
       }
     } else {
       cinder_config {

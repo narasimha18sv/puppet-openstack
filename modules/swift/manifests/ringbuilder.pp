@@ -45,39 +45,5 @@ class swift::ringbuilder(
   Swift::Ringbuilder::Create['account'] -> Ring_account_device <| |> ~> Swift::Ringbuilder::Rebalance['account']
 
   swift::ringbuilder::rebalance{ ['object', 'account', 'container']: }
-  $storage_node_address = $::openstack::config::storage_address_management
-  $storage_node_drive = hiera(openstack::config::storage_drive)
-
-  exec {'creating_Rings':
-                command => ["/usr/bin/swift-ring-builder account.builder add z1-${storage_node_address}:6002/${storage_node_drive} 110"],
-                returns => ['2','0'],
-                logoutput => "true",
-  }
-
-  exec {'creating_Rings1':
-                command => ["/usr/bin/swift-ring-builder container.builder add z1-${storage_node_address}:6001/${storage_node_drive} 110"],
-                returns => ['2','0'],
-                logoutput => "true",
-  }  
-
-  exec {'creating_Rings2':
-                command => ["/usr/bin/swift-ring-builder object.builder add z1-${storage_node_address}:6000/${storage_node_drive} 110"],
-                returns => ['2','0'],
-                logoutput => "true",
-  }
-  exec {'Rebalancing':
-                command => ["/usr/bin/swift-ring-builder account.builder rebalance"],
-                returns => ['2','0'],
-  }
-
-  exec {'Rebalancing1':
-                command => ["/usr/bin/swift-ring-builder container.builder rebalance"],
-                returns => ['2','0'],
-  }
-
-  exec {'Rebalancing2':
-                command => ["/usr/bin/swift-ring-builder object.builder rebalance"],
-                returns => ['2','0'],
-  }
 
 }

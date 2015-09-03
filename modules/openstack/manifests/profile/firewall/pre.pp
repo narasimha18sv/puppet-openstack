@@ -18,7 +18,7 @@ class openstack::profile::firewall::pre {
       purge   => true,
       ignore  => ['neutron','virbr0'],
       before  => Firewall['0001 - related established'],
-      require => [ Class['::openstack::resources::repo::uca'] ],
+    #  require => [ Class['::openstack::resources::repo::uca'] ],
     }
   }
 

@@ -1,6 +1,6 @@
 # The profile to install rabbitmq and set the firewall
-
 class openstack::profile::rabbitmq {
+  $management_address = $::openstack::config::controller_address_management
 
   if $::osfamily == 'RedHat' {
     package { 'erlang':
@@ -24,14 +24,8 @@ class openstack::profile::rabbitmq {
   }->Anchor<| title == 'nova-start' |>
 
   class { '::rabbitmq':
-    service_ensure           => 'running',
-    port                     => 5672,
-    config_cluster           => true,
-    cluster_nodes            => $::openstack::config::rabbitmq_cluster,
-    cluster_node_type        => 'ram',
-    erlang_cookie            => 'password123',
-    wipe_db_on_cookie_change => true,
-    delete_guest_user        => true,
-    cluster_partition_handling => autoheal,
+    service_ensure    => 'running',
+    port              => 5672,
+    delete_guest_user => true,
   }
 }

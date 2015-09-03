@@ -10,7 +10,7 @@ class openstack::common::neutron {
   $data_address = ip_for_network($data_network)
 
   # neutron auth depends upon a keystone configuration
-#  include ::openstack::common::keystone
+  include ::openstack::common::keystone
 
   class { '::neutron':
     rabbit_host           => $controller_management_address,
@@ -24,16 +24,16 @@ class openstack::common::neutron {
     service_plugins       => $::openstack::config::neutron_service_plugins,
   }
 
-#  class { '::neutron::keystone::auth':
-#    password         => $::openstack::config::neutron_password,
-#    public_address   => $::openstack::config::controller_address_api,
-#    admin_address    => $::openstack::config::controller_address_management,
-#    internal_address => $::openstack::config::controller_address_management,
-#    region           => $::openstack::config::region,
-#  }
+  class { '::neutron::keystone::auth':
+    password         => $::openstack::config::neutron_password,
+    public_address   => $::openstack::config::controller_address_api,
+    admin_address    => $::openstack::config::controller_address_management,
+    internal_address => $::openstack::config::controller_address_management,
+    region           => $::openstack::config::region,
+  }
 
   class { '::neutron::server':
-    auth_host           => $::openstack::config::keystone_public_address,
+    auth_host           => $::openstack::config::controller_address_management,
     auth_password       => $::openstack::config::neutron_password,
     database_connection => $::openstack::resources::connectors::neutron,
     enabled             => $::openstack::profile::base::is_controller,
@@ -43,7 +43,7 @@ class openstack::common::neutron {
 
   class { '::neutron::server::notifications':
     nova_url            => "http://${controller_management_address}:8774/v2/",
-    nova_admin_auth_url => "http://${::openstack::config::keystone_public_address}:35357/v2.0/",
+    nova_admin_auth_url => "http://${controller_management_address}:35357/v2.0/",
     nova_admin_password => $::openstack::config::nova_password,
     nova_region_name    => $::openstack::config::region,
   }

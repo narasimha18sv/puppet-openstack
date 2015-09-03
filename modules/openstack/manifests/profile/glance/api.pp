@@ -13,21 +13,6 @@ class openstack::profile::glance::api {
 
   $controller_address = $::openstack::config::controller_address_management
 
-#  if $management_address != $explicit_management_address {
-#    fail("Glance Auth setup failed. The inferred location of Glance from
-#    the openstack::network::management hiera value is
-#    ${management_address}. The explicit address from
-#    openstack::storage::address::management is ${explicit_management_address}.
-#    Please correct this difference.")
-#  }
-
-#  if $api_address != $explicit_api_address {
-#    fail("Glance Auth setup failed. The inferred location of Glance from
-#    the openstack::network::management hiera value is
-#    ${api_address}. The explicit address from
-#    openstack::storage::address::api is ${explicit_api_address}.
-#     Please correct this difference.")
-#  }
 
   openstack::resources::firewall { 'Glance API': port      => '9292', }
   openstack::resources::firewall { 'Glance Registry': port => '9191', }
@@ -39,7 +24,7 @@ class openstack::profile::glance::api {
   class { '::glance::registry':
     keystone_password   => $::openstack::config::glance_password,
     database_connection => $::openstack::resources::connectors::glance,
-    auth_host           => $::openstack::config::keystone_public_address,
+    auth_host           => $::openstack::config::controller_address_management,
     keystone_tenant     => 'services',
     keystone_user       => 'glance',
     verbose             => $::openstack::config::verbose,
@@ -50,6 +35,6 @@ class openstack::profile::glance::api {
   class { '::glance::notify::rabbitmq':
     rabbit_password => $::openstack::config::rabbitmq_password,
     rabbit_userid   => $::openstack::config::rabbitmq_user,
-    rabbit_host     => $::openstack::config::mysql_host_address,
+    rabbit_host     => $::openstack::config::controller_address_management,
   }
 }

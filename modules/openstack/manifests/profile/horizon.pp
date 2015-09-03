@@ -4,7 +4,6 @@ class openstack::profile::horizon {
     fqdn            => [ '127.0.0.1', $::openstack::config::controller_address_api, $::fqdn ],
     secret_key      => $::openstack::config::horizon_secret_key,
     cache_server_ip => $::openstack::config::controller_address_management,
-    keystone_url    => "http://${::openstack::config::keystone_public_address}:5000/v2.0",
 
   }
 

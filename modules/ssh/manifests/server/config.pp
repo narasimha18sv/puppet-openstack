@@ -1,12 +1,16 @@
 class ssh::server::config {
-  file { $ssh::params::sshd_config:
-    ensure  => present,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0600',
-    replace => false,
-    source  => "puppet:///modules/${module_name}/sshd_config",
-    require => Class['ssh::server::install'],
-    notify  => Class['ssh::server::service'],
+
+  concat { $ssh::params::sshd_config:
+    ensure => present,
+    owner  => '0',
+    group  => '0',
+    mode   => '0600',
+    notify => Service[$ssh::params::service_name]
+  }
+
+  concat::fragment { 'global config':
+    target  => $ssh::params::sshd_config,
+    content => template("${module_name}/sshd_config.erb"),
+    order   => '00'
   }
 }

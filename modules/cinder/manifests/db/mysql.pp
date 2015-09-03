@@ -36,7 +36,7 @@ class cinder::db::mysql (
   $host          = '127.0.0.1',
   $allowed_hosts = undef,
   $charset       = 'utf8',
-  $collate       = 'utf8_unicode_ci',
+  $collate       = 'utf8_general_ci',
   $cluster_id    = 'localzone',
   $mysql_module  = undef,
 ) {
@@ -56,9 +56,6 @@ class cinder::db::mysql (
     collate       => $collate,
     allowed_hosts => $allowed_hosts,
   }
-#   exec{'cinder db sync':
-#       command => 'cinder-manage db sync',
-#       path    => '/usr/bin',
-#   }
-#  ::Openstacklib::Db::Mysql['cinder'] #~> Exec<| title == 'cinder-manage db_sync' |>
+
+  ::Openstacklib::Db::Mysql['cinder'] ~> Exec<| title == 'cinder-manage db_sync' |>
 }

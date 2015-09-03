@@ -27,7 +27,7 @@
 #    (optional) SSL version to use (valid only if SSL enabled).
 #    Valid values are TLSv1, SSLv23 and SSLv3. SSLv2 may be
 #    available on some distributions.
-#    Defaults to 'SSLv3'
+#    Defaults to 'TLSv1'
 #  [*rabbit_notification_exchange*]
 #    Defaults  to 'glance'
 #  [*rabbit_notification_topic*]
@@ -35,6 +35,9 @@
 #  [*rabbit_durable_queues*]
 #    Defaults  to false
 #
+#  [*notification_driver*]
+#    Notification driver to use. Defaults to 'messaging'.
+
 class glance::notify::rabbitmq(
   $rabbit_password,
   $rabbit_userid                = 'guest',
@@ -46,11 +49,12 @@ class glance::notify::rabbitmq(
   $kombu_ssl_ca_certs           = undef,
   $kombu_ssl_certfile           = undef,
   $kombu_ssl_keyfile            = undef,
-  $kombu_ssl_version            = 'SSLv3',
+  $kombu_ssl_version            = 'TLSv1',
   $rabbit_notification_exchange = 'glance',
   $rabbit_notification_topic    = 'notifications',
   $rabbit_durable_queues        = false,
   $amqp_durable_queues          = false,
+  $notification_driver          = 'messaging',
 ) {
 
   if $rabbit_durable_queues {
@@ -58,18 +62,6 @@ class glance::notify::rabbitmq(
     $amqp_durable_queues_real = $rabbit_durable_queues
   } else {
     $amqp_durable_queues_real = $amqp_durable_queues
-  }
-
-  if $rabbit_use_ssl {
-    if !$kombu_ssl_ca_certs {
-      fail('The kombu_ssl_ca_certs parameter is required when rabbit_use_ssl is set to true')
-    }
-    if !$kombu_ssl_certfile {
-      fail('The kombu_ssl_certfile parameter is required when rabbit_use_ssl is set to true')
-    }
-    if !$kombu_ssl_keyfile {
-      fail('The kombu_ssl_keyfile parameter is required when rabbit_use_ssl is set to true')
-    }
   }
 
   if $rabbit_hosts {
@@ -87,7 +79,7 @@ class glance::notify::rabbitmq(
   }
 
   glance_api_config {
-    'DEFAULT/notification_driver':          value => 'messaging';
+    'DEFAULT/notification_driver':          value => $notification_driver;
     'DEFAULT/rabbit_virtual_host':          value => $rabbit_virtual_host;
     'DEFAULT/rabbit_password':              value => $rabbit_password, secret => true;
     'DEFAULT/rabbit_userid':                value => $rabbit_userid;
@@ -98,19 +90,34 @@ class glance::notify::rabbitmq(
   }
 
   if $rabbit_use_ssl {
-    glance_api_config {
-      'DEFAULT/kombu_ssl_ca_certs': value => $kombu_ssl_ca_certs;
-      'DEFAULT/kombu_ssl_certfile': value => $kombu_ssl_certfile;
-      'DEFAULT/kombu_ssl_keyfile':  value => $kombu_ssl_keyfile;
-      'DEFAULT/kombu_ssl_version':  value => $kombu_ssl_version;
+    glance_api_config { 'DEFAULT/kombu_ssl_version': value => $kombu_ssl_version }
+
+    if $kombu_ssl_ca_certs {
+      glance_api_config { 'DEFAULT/kombu_ssl_ca_certs': value => $kombu_ssl_ca_certs }
+    } else {
+      glance_api_config { 'DEFAULT/kombu_ssl_ca_certs': ensure => absent}
+    }
+
+    if $kombu_ssl_certfile {
+      glance_api_config { 'DEFAULT/kombu_ssl_certfile': value => $kombu_ssl_certfile }
+    } else {
+      glance_api_config { 'DEFAULT/kombu_ssl_certfile': ensure => absent}
+    }
+
+    if $kombu_ssl_keyfile {
+      glance_api_config { 'DEFAULT/kombu_ssl_keyfile': value => $kombu_ssl_keyfile }
+    } else {
+      glance_api_config { 'DEFAULT/kombu_ssl_keyfile': ensure => absent}
     }
   } else {
     glance_api_config {
+      'DEFAULT/kombu_ssl_version':  ensure => absent;
       'DEFAULT/kombu_ssl_ca_certs': ensure => absent;
       'DEFAULT/kombu_ssl_certfile': ensure => absent;
       'DEFAULT/kombu_ssl_keyfile':  ensure => absent;
-      'DEFAULT/kombu_ssl_version':  ensure => absent;
+    }
+    if ($kombu_ssl_keyfile or $kombu_ssl_certfile or $kombu_ssl_ca_certs) {
+      notice('Configuration of certificates with $rabbit_use_ssl == false is a useless config')
     }
   }
-
 }

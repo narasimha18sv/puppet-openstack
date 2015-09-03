@@ -1,9 +1,9 @@
-openstack::config::region: 'openstack'
+openstack::region: 'openstack'
 
 ######## Networks
 openstack::network::api: '172.16.59.0/24'
 openstack::network::external: '172.16.59.0/24'
-openstack::config::network_management: '172.16.13.0/24'
+openstack::network::management: '172.16.13.0/24'
 openstack::network::data: '172.16.59.0/24'
 
 openstack::network::external::ippool::start: 172.16.59.100
@@ -17,19 +17,19 @@ openstack::network::neutron::private: '10.0.0.0/24'
 
 ######## Fixed IPs (controllers)
 
-openstack::config::controller_address_api: '172.16.59.132'
-openstack::config::controller_address_management: '172.16.13.185'
-openstack::config::storage_address_api: '172.16.59.132'
-openstack::config::storage_address_management: '172.16.59.132'
+openstack::controller::address::api: '172.16.59.132'
+openstack::controller::address::management: '172.16.59.132'
+openstack::storage::address::api: '172.16.59.132'
+openstack::storage::address::management: '172.16.59.132'
 openstack::config::storage_drive: 'sdb'
 openstack::config::storage_partition_type: 'ext3'
 
 
 ######## Database
-openstack::config::mysql_host_address: '172.16.48.45'
-openstack::config::mysql_root_password: 'spam-gak'
+openstack::mysql::host_address: '172.16.59.132'
+openstack::mysql::root_password: 'root'
 openstack::mysql::service_password: 'root'
-openstack::mysql::allowed_hosts: ['localhost', '127.0.0.1', '172.16.59.%', '172.17.42.1']
+openstack::mysql::allowed_hosts: ['localhost', '127.0.0.1', '172.16.59.%']
 
 openstack::mysql::keystone::user: 'keystone'
 openstack::mysql::keystone::pass: 'keystone'
@@ -39,7 +39,7 @@ openstack::mysql::cinder::pass: 'cinder'
 
 openstack::mysql::glance::user: 'glance'
 openstack::mysql::glance::pass: 'glance'
-apenstack::glance::api_servers: ['172.16.59.132:9292']
+openstack::glance::api_servers: ['172.16.59.132:9292']
 
 openstack::mysql::nova::user: 'nova'
 openstack::mysql::nova::pass: 'nova'
@@ -52,17 +52,15 @@ openstack::mysql::heat::pass: 'heat'
 
 ######## RabbitMQ
 
-openstack::config::rabbitmq_user: 'openstack'
-openstack::config::rabbitmq_password: 'pose-vix'
-openstack::config::rabbitmq_hosts: ['172.16.12.26:5672', '172.16.12.174:5672', '172.16.12.1208:5672']
-openstack::config::rabbitmq_cluster: ['rabbitc1',  'rabbitc2',  'rabbitc3']
+openstack::rabbitmq::user: 'openstack'
+openstack::rabbitmq::password: 'openstack'
+openstack::rabbitmq::hosts: ['172.16.59.132:5672']
+openstack::config::rabbitmq_cluster: ['client1']
 
 ######## Keystone
 
-openstack::config::keystone_public_address: '192.168.15.186'
-openstack::config::keystone_admin_address: '192.168.15.186'
 openstack::keystone::admin_token: 'sosp-kyl'
-openstack::keystone::admin_email: 'chris.hoge@puppetlabs.com'
+openstack::keystone::admin_email: 'narasimha18sv@gmail.com'
 openstack::keystone::admin_password: 'fyby-tet'
 
 openstack::keystone::tenants:
@@ -90,27 +88,27 @@ openstack::keystone::users:
 
 ######## Glance
 
-openstack::glance::password: 'na-mu-va'
+openstack::glance::password: 'glance'
 
 ######## Cinder
 
-openstack::cinder::password: 'zi-co-se'
-openstack::cinder::volume_size: '8G'
+openstack::cinder::password: 'cinder'
+openstack::cinder::volume_disk: 'sdb'
 
 ######## Swift
 
-openstack::config::swift_password: 'dexc-flo'
-openstack::config::swift_hash_suffix: 'pop-bang'
+openstack::swift::password: 'swift'
+openstack::swift::hash_suffix: 'swifthash'
 
 ######## Nova
 
 openstack::nova::libvirt_type: 'kvm'
-openstack::nova::password: 'quuk-paj'
+openstack::nova::password: 'nova'
 
 ######## Neutron
 
-openstack::neutron::password: 'whi-rtuz'
-openstack::neutron::shared_secret: 'by-sa-bo'
+openstack::neutron::password: 'neutron'
+openstack::neutron::shared_secret: 'metadata'
 openstack::neutron::core_plugin: 'ml2'
 openstack::neutron::service_plugins: ['router', 'firewall', 'lbaas', 'vpnaas', 'metering']
 
@@ -118,17 +116,17 @@ openstack::neutron::service_plugins: ['router', 'firewall', 'lbaas', 'vpnaas', '
 openstack::ceilometer::address::management: '172.16.59.132'
 openstack::ceilometer::mongo::username: 'mongo'
 openstack::ceilometer::mongo::password: 'mongosecretkey123'
-openstack::ceilometer::password: 'whi-truz'
+openstack::ceilometer::password: 'ceilometer'
 openstack::ceilometer::meteringsecret: 'ceilometersecretkey'
 
 ######## Heat
-openstack::heat::password: 'zap-bang'
+openstack::heat::password: 'heat'
 openstack::heat::encryption_key: 'heatsecretkey123'
 
 
 ######## Horizon
 
-openstack::horizon::secret_key: 'whu-ghuk'
+openstack::horizon::secret_key: 'horizon'
 
 ######## Tempest
 
@@ -151,17 +149,6 @@ openstack::tempest::swift_available     : false
 ######## Log levels
 openstack::verbose: 'True'
 openstack::debug: 'True'
-######## VMWare Backend
-nova_backend: 'vmware'
+######## Hypervisor Backend
+backend: 'kvm'
 
-######## VIP
-controller01_hostname: 'controller1'
-controller02_hostname: 'controller2'
-controller01_mgt_ip: '192.168.15.190'
-controller02_mgt_ip: '192.168.15.186'
-
-####### VMWARE
-openstack::config::host_ip: '10.10.10.10'
-openstack::config::host_username: 'root'
-openstack::config::host_password: 'root'
-openstack::config::cluster_name: 'esxi_cluster'

@@ -1,12 +1,18 @@
 {
   "name": "stackforge-keystone",
-  "version": "5.0.0",
-  "author": "Puppet Labs and StackForge Contributors",
+  "version": "5.1.0",
+  "author": "Puppet Labs and OpenStack Contributors",
   "summary": "Puppet module for OpenStack Keystone",
-  "license": "Apache License 2.0",
-  "source": "git://github.com/stackforge/puppet-keystone.git",
+  "license": "Apache-2.0",
+  "source": "git://github.com/openstack/puppet-keystone.git",
   "project_page": "https://launchpad.net/puppet-keystone",
   "issues_url": "https://bugs.launchpad.net/puppet-keystone",
+  "dependencies": [
+    {"name":"puppetlabs/apache","version_requirement":">=1.0.0 <2.0.0"},
+    {"name":"puppetlabs/inifile","version_requirement":">=1.0.0 <2.0.0"},
+    {"name":"puppetlabs/stdlib","version_requirement":">=4.0.0 <5.0.0"},
+    {"name":"stackforge/openstacklib","version_requirement":">=5.0.0 <6.0.0"}
+  ],
   "requirements": [
     {
       "name": "pe",
@@ -45,11 +51,5 @@
       ]
     }
   ],
-  "description": "Installs and configures OpenStack Keystone (Identity).",
-  "dependencies": [
-    {"name":"puppetlabs/apache","version_requirement":">=1.0.0 <2.0.0"},
-    {"name":"puppetlabs/inifile","version_requirement":">=1.0.0 <2.0.0"},
-    {"name":"puppetlabs/stdlib","version_requirement":">=4.0.0 <5.0.0"},
-    {"name":"stackforge/openstacklib","version_requirement":">=5.0.0"}
-  ]
+  "description": "Installs and configures OpenStack Keystone (Identity)."
 }

@@ -232,7 +232,7 @@ class neutron::server (
   if $l3_ha {
     if $min_l3_agents_per_router <= $max_l3_agents_per_router or $max_l3_agents_per_router == '0' {
       neutron_config {
-        'DEFAULT/ha_enabled':               value => true;
+        'DEFAULT/l3_ha':                    value => true;
         'DEFAULT/max_l3_agents_per_router': value => $max_l3_agents_per_router;
         'DEFAULT/min_l3_agents_per_router': value => $min_l3_agents_per_router;
         'DEFAULT/l3_ha_net_cidr':           value => $l3_ha_net_cidr;
@@ -240,6 +240,10 @@ class neutron::server (
     } else {
       fail('min_l3_agents_per_router should be less than or equal to max_l3_agents_per_router.')
     }
+  } else {
+      neutron_config {
+        'DEFAULT/l3_ha':                    value => false;
+      }
   }
 
   if $mysql_module {
@@ -316,14 +320,14 @@ class neutron::server (
     }
   }
 
-  if $sync_db {
-    if ($::neutron::params::server_package) {
+  #if $sync_db {
+  #  if ($::neutron::params::server_package) {
       # Debian platforms
       Package<| title == 'neutron-server' |> ~> Exec['neutron-db-sync']
-    } else {
+#    } else {
       # RH platforms
-      Package<| title == 'neutron' |> ~> Exec['neutron-db-sync']
-    }
+ #     Package<| title == 'neutron' |> ~> Exec['neutron-db-sync']
+  #  }
     exec { 'neutron-db-sync':
       command     => 'neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugin.ini upgrade head',
       path        => '/usr/bin',
@@ -331,7 +335,8 @@ class neutron::server (
       require     => Neutron_config['database/connection'],
       refreshonly => true
     }
-  }
+    Neutron_config<||> ~> Exec['neutron-db-sync']
+  #}
 
   neutron_config {
     'DEFAULT/api_workers':             value => $api_workers;

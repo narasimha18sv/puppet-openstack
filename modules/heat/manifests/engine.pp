@@ -30,23 +30,32 @@
 #   (optional) URL of the Heat cloudwatch server
 #   Defaults to 'http://127.0.0.1:8003'
 #
+# [*enable_stack_abandon*]
+#   (optional) Whether to allow the stack-abandon operation.
+#   Defaults to false
+#
 # [*engine_life_check_timeout*]
 #   (optional) RPC timeout (in seconds) for the engine liveness check that is
 #   used for stack locking
 #   Defaults to '2'
-#
-# [*trusts_delegated_roles*]
-#   (optional) Array of trustor roles to be delegated to heat.
-#   Defaults to ['heat_stack_owner']
 #
 # [*deferred_auth_method*]
 #   (optional) Select deferred auth method.
 #   Can be "password" or "trusts".
 #   Defaults to 'trusts'
 #
+# [*trusts_delegated_roles*]
+#   (optional) Array of trustor roles to be delegated to heat.
+#   This value is also used by heat::keystone::auth if it is set to
+#   configure the keystone roles.
+#   Defaults to ['heat_stack_owner']
+#
+# === Deprecated Parameters
+#
 # [*configure_delegated_roles*]
 #   (optional) Whether to configure the delegated roles.
 #   Defaults to true
+#   Deprecated: Moved to heat::keystone::auth, will be removed in a future release.
 #
 class heat::engine (
   $auth_encryption_key,
@@ -57,9 +66,10 @@ class heat::engine (
   $heat_waitcondition_server_url = 'http://127.0.0.1:8000/v1/waitcondition',
   $heat_watch_server_url         = 'http://127.0.0.1:8003',
   $engine_life_check_timeout     = '2',
-  $trusts_delegated_roles        = ['heat_stack_owner'],
   $deferred_auth_method          = 'trusts',
-  $configure_delegated_roles     = true,
+  $trusts_delegated_roles        = ['heat_stack_owner'],  #DEPRECATED
+  $configure_delegated_roles     = true,                  #DEPRECATED
+  $enable_stack_abandon          = false,
 ) {
 
   include heat::params
@@ -71,6 +81,7 @@ class heat::engine (
   package { 'heat-engine':
     ensure => installed,
     name   => $::heat::params::engine_package_name,
+    notify => Exec['heat-dbsync'],
   }
 
   if $manage_service {
@@ -82,6 +93,7 @@ class heat::engine (
   }
 
   if $configure_delegated_roles {
+    warning ('configure_delegated_roles is deprecated in this class, use heat::keystone::auth')
     keystone_role { $trusts_delegated_roles:
       ensure => present,
     }
@@ -108,5 +120,6 @@ class heat::engine (
     'DEFAULT/engine_life_check_timeout'    : value => $engine_life_check_timeout;
     'DEFAULT/trusts_delegated_roles'       : value => $trusts_delegated_roles;
     'DEFAULT/deferred_auth_method'         : value => $deferred_auth_method;
+    'DEFAULT/enable_stack_abandon'         : value => $enable_stack_abandon;
   }
 }

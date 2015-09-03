@@ -25,15 +25,20 @@
 #   (optional) Connection url to connect to nova database.
 #   Defaults to false
 #
+# [*slave_connection*]
+#   (optional) Connection url to connect to nova slave database (read-only).
+#   Defaults to false
+#
 # [*database_idle_timeout*]
 #   (optional) Timeout before idle db connections are reaped.
 #   Defaults to 3600
 #
 # [*rpc_backend*]
 #   (optional) The rpc backend implementation to use, can be:
-#     nova.openstack.common.rpc.impl_kombu (for rabbitmq)
-#     nova.openstack.common.rpc.impl_qpid  (for qpid)
-#   Defaults to 'nova.openstack.common.rpc.impl_kombu'
+#     rabbit (for rabbitmq)
+#     qpid (for qpid)
+#     zmq (for zeromq)
+#   Defaults to 'rabbit'
 #
 # [*image_service*]
 #   (optional) Service used to search for and retrieve images.
@@ -91,7 +96,7 @@
 #   (optional) SSL version to use (valid only if SSL enabled).
 #   Valid values are TLSv1, SSLv23 and SSLv3. SSLv2 may be
 #   available on some distributions.
-#   Defaults to 'SSLv3'
+#   Defaults to 'TLSv1'
 #
 # [*amqp_durable_queues*]
 #   (optional) Define queues as "durable" to rabbitmq.
@@ -268,8 +273,9 @@
 class nova(
   $ensure_package           = 'present',
   $database_connection      = false,
+  $slave_connection         = false,
   $database_idle_timeout    = 3600,
-  $rpc_backend              = 'nova.openstack.common.rpc.impl_kombu',
+  $rpc_backend              = 'rabbit',
   $image_service            = 'nova.image.glance.GlanceImageService',
   # these glance params should be optional
   # this should probably just be configured as a glance client
@@ -286,7 +292,7 @@ class nova(
   $kombu_ssl_ca_certs       = undef,
   $kombu_ssl_certfile       = undef,
   $kombu_ssl_keyfile        = undef,
-  $kombu_ssl_version        = 'SSLv3',
+  $kombu_ssl_version        = 'TLSv1',
   $amqp_durable_queues      = false,
   $qpid_hostname            = 'localhost',
   $qpid_port                = '5672',
@@ -335,6 +341,9 @@ class nova(
   $logdir                   = false,
   $os_region_name           = undef,
 ) inherits nova::params {
+
+  # maintain backward compatibility
+  include nova::db
 
   if $mysql_module {
     warning('The mysql_module parameter is deprecated. The latest 2.x mysql module will be used.')
@@ -498,39 +507,6 @@ class nova(
     refreshonly => true,
   }
 
-  if $sql_connection {
-    warning('The sql_connection parameter is deprecated, use database_connection instead.')
-    $database_connection_real = $sql_connection
-  } else {
-    $database_connection_real = $database_connection
-  }
-
-  if $sql_idle_timeout {
-    warning('The sql_idle_timeout parameter is deprecated, use database_idle_timeout instead.')
-    $database_idle_timeout_real = $sql_idle_timeout
-  } else {
-    $database_idle_timeout_real = $database_idle_timeout
-  }
-
-  # both the database_connection and rabbit_host are things
-  # that may need to be collected from a remote host
-  if $database_connection_real {
-    if($database_connection_real =~ /mysql:\/\/\S+:\S+@\S+\/\S+/) {
-      require 'mysql::bindings'
-      require 'mysql::bindings::python'
-    } elsif($database_connection_real =~ /postgresql:\/\/\S+:\S+@\S+\/\S+/) {
-
-    } elsif($database_connection_real =~ /sqlite:\/\//) {
-
-    } else {
-      fail("Invalid db connection ${database_connection_real}")
-    }
-    nova_config {
-      'database/connection':   value => $database_connection_real, secret => true;
-      'database/idle_timeout': value => $database_idle_timeout_real;
-    }
-  }
-
   nova_config { 'DEFAULT/image_service': value => $image_service }
 
   if $image_service == 'nova.image.glance.GlanceImageService' {
@@ -547,7 +523,9 @@ class nova(
     nova_config { 'DEFAULT/memcached_servers': ensure => absent }
   }
 
-  if $rpc_backend == 'nova.openstack.common.rpc.impl_kombu' {
+  # we keep "nova.openstack.common.rpc.impl_kombu" for backward compatibility
+  # but since Icehouse, "rabbit" is enough.
+  if $rpc_backend == 'nova.openstack.common.rpc.impl_kombu' or $rpc_backend == 'rabbit' {
     # I may want to support exporting and collecting these
     nova_config {
       'DEFAULT/rabbit_password':     value => $rabbit_password, secret => true;
@@ -610,7 +588,9 @@ class nova(
     }
   }
 
-  if $rpc_backend == 'nova.openstack.common.rpc.impl_qpid' {
+  # we keep "nova.openstack.common.rpc.impl_qpid" for backward compatibility
+  # but since Icehouse, "qpid" is enough.
+  if $rpc_backend == 'nova.openstack.common.rpc.impl_qpid' or $rpc_backend == 'qpid' {
     nova_config {
       'DEFAULT/qpid_hostname':               value => $qpid_hostname;
       'DEFAULT/qpid_port':                   value => $qpid_port;
@@ -674,7 +654,7 @@ class nova(
       ensure  => directory,
       mode    => '0750',
       owner   => 'nova',
-      group   => 'nova',
+      group   => $::nova::params::nova_log_group,
       require => Package['nova-common'],
     }
     nova_config { 'DEFAULT/log_dir': value => $log_dir_real;}

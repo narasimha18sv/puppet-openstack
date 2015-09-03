@@ -1,3 +1,19 @@
+## 2015-07-15 - Supported Release 1.4.1
+### Summary
+This release bumps the metadata for PE up.
+
+##2015-07-07 - Supported Releases 1.4.0
+###Summary
+
+This is primarily a release which includes acceptance tests updates, but also includes some minor bug fixes and improvements
+
+####Features
+- Solaris 12 Support
+- Acceptance testing improvements
+
+####Bugfixes
+- MODULES-1599 Match only on space and tab whitespace after k/v separator
+
 ##2015-06-09 - Supported Releases 1.3.0
 ###Summary
 

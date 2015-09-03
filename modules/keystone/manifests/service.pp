@@ -82,7 +82,7 @@ class keystone::service(
   include keystone::params
 
   service { 'keystone':
-    ensure     => 'running',
+    ensure     => $ensure,
     name       => $service_name,
     enable     => $enable,
     hasstatus  => $hasstatus,

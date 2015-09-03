@@ -102,8 +102,12 @@ describe 'cinder' do
     end
 
     it 'should contain many' do
-      should_not contain_cinder_config('DEFAULT/rabbit_host')
-      should_not contain_cinder_config('DEFAULT/rabbit_port')
+      should contain_cinder_config('DEFAULT/rabbit_host').with(
+        :value => nil
+      )
+      should contain_cinder_config('DEFAULT/rabbit_port').with(
+        :value => nil
+      )
       should contain_cinder_config('DEFAULT/rabbit_hosts').with(
         :value => 'rabbit1:5672,rabbit2:5672'
       )
@@ -119,8 +123,12 @@ describe 'cinder' do
     end
 
     it 'should contain many' do
-      should_not contain_cinder_config('DEFAULT/rabbit_host')
-      should_not contain_cinder_config('DEFAULT/rabbit_port')
+      should contain_cinder_config('DEFAULT/rabbit_host').with(
+        :value => nil
+      )
+      should contain_cinder_config('DEFAULT/rabbit_port').with(
+        :value => nil
+      )
       should contain_cinder_config('DEFAULT/rabbit_hosts').with(
         :value => 'rabbit1:5672'
       )
@@ -195,14 +203,14 @@ describe 'cinder' do
     it { should contain_cinder_config('DEFAULT/qpid_sasl_mechanisms').with_value('DIGEST-MD5 GSSAPI PLAIN') }
   end
 
-  describe 'with SSL enabled' do
+  describe 'with SSL enabled with kombu' do
     let :params do
       req_params.merge!({
         :rabbit_use_ssl     => true,
         :kombu_ssl_ca_certs => '/path/to/ssl/ca/certs',
         :kombu_ssl_certfile => '/path/to/ssl/cert/file',
         :kombu_ssl_keyfile  => '/path/to/ssl/keyfile',
-        :kombu_ssl_version  => 'SSLv3'
+        :kombu_ssl_version  => 'TLSv1'
       })
     end
 
@@ -211,7 +219,23 @@ describe 'cinder' do
       should contain_cinder_config('DEFAULT/kombu_ssl_ca_certs').with_value('/path/to/ssl/ca/certs')
       should contain_cinder_config('DEFAULT/kombu_ssl_certfile').with_value('/path/to/ssl/cert/file')
       should contain_cinder_config('DEFAULT/kombu_ssl_keyfile').with_value('/path/to/ssl/keyfile')
-      should contain_cinder_config('DEFAULT/kombu_ssl_version').with_value('SSLv3')
+      should contain_cinder_config('DEFAULT/kombu_ssl_version').with_value('TLSv1')
+    end
+  end
+
+  describe 'with SSL enabled without kombu' do
+    let :params do
+      req_params.merge!({
+        :rabbit_use_ssl     => true,
+      })
+    end
+
+    it do
+      should contain_cinder_config('DEFAULT/rabbit_use_ssl').with_value('true')
+      should contain_cinder_config('DEFAULT/kombu_ssl_ca_certs').with_ensure('absent')
+      should contain_cinder_config('DEFAULT/kombu_ssl_certfile').with_ensure('absent')
+      should contain_cinder_config('DEFAULT/kombu_ssl_keyfile').with_ensure('absent')
+      should contain_cinder_config('DEFAULT/kombu_ssl_version').with_value('TLSv1')
     end
   end
 
@@ -222,7 +246,7 @@ describe 'cinder' do
         :kombu_ssl_ca_certs => 'undef',
         :kombu_ssl_certfile => 'undef',
         :kombu_ssl_keyfile  => 'undef',
-        :kombu_ssl_version  => 'SSLv3'
+        :kombu_ssl_version  => 'TLSv1'
       })
     end
 

@@ -58,13 +58,13 @@ class openstack::profile::neutron::router {
   vs_bridge { $external_bridge:
     ensure => present,
   }
-  if $external_device != $external_bridge {
-    vs_port { $external_device:
-      ensure => present,
-      bridge => $external_bridge,
-    }
-  } else {
+  #if $external_device != $external_bridge {
+  #  vs_port { $external_device:
+  #    ensure => present,
+  #    bridge => $external_bridge,
+   # }
+  #} else {
     # External bridge already has the external device's IP, thus the external
     # device has already been linked
-  }
+  #}
 }

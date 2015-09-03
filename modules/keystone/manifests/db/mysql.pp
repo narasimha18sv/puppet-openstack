@@ -58,5 +58,8 @@ class keystone::db::mysql(
     allowed_hosts => $allowed_hosts,
   }
 
-#  ::Openstacklib::Db::Mysql['keystone'] # ~> Exec<| title == 'keystone-manage db_sync' |>
+  #::Openstacklib::Db::Mysql['keystone'] # ~> exec{'keystone db sync':
+#    command  => 'keystone-manage db_sync',
+#    path     => '/usr/bin', 
+#  }
 }

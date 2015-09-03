@@ -6,7 +6,7 @@
 class openstack::common::glance {
   class { '::glance::api':
     keystone_password   => $::openstack::config::glance_password,
-    auth_host           => $::openstack::config::keystone_public_address,
+    auth_host           => $::openstack::config::controller_address_management,
     keystone_tenant     => 'services',
     keystone_user       => 'glance',
     database_connection => $::openstack::resources::connectors::glance,

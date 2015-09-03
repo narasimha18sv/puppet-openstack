@@ -26,6 +26,7 @@ define apache::vhost(
   $ssl_verify_client           = undef,
   $ssl_verify_depth            = undef,
   $ssl_options                 = undef,
+  $ssl_openssl_conf_cmd        = undef,
   $ssl_proxyengine             = false,
   $priority                    = undef,
   $default_vhost               = false,
@@ -81,6 +82,7 @@ define apache::vhost(
   $rack_base_uris              = undef,
   $headers                     = undef,
   $request_headers             = undef,
+  $filters                     = undef,
   $rewrites                    = undef,
   $rewrite_base                = undef,
   $rewrite_rule                = undef,
@@ -397,6 +399,13 @@ define apache::vhost(
     }
   }
 
+  # Check if mod_filter is required to process $filters
+  if $filters {
+    if ! defined(Class['apache::mod::filter']) {
+      include ::apache::mod::filter
+    }
+  }
+
   if ($setenv and ! empty($setenv)) or ($setenvif and ! empty($setenvif)) {
     if ! defined(Class['apache::mod::setenvif']) {
       include ::apache::mod::setenvif
@@ -627,7 +636,7 @@ define apache::vhost(
   # - $proxy_pass_match
   # - $proxy_preserve_host
   # - $no_proxy_uris
-  if $proxy_dest or $proxy_pass or $proxy_pass_match {
+  if $proxy_dest or $proxy_pass or $proxy_pass_match or $proxy_dest_match {
     concat::fragment { "${name}-proxy":
       target  => "${priority_real}${filename}.conf",
       order   => 140,
@@ -729,6 +738,7 @@ define apache::vhost(
   # - $ssl_verify_client
   # - $ssl_verify_depth
   # - $ssl_options
+  # - $ssl_openssl_conf_cmd
   # - $apache_version
   if $ssl {
     concat::fragment { "${name}-ssl":
@@ -877,6 +887,16 @@ define apache::vhost(
       target  => "${priority_real}${filename}.conf",
       order   => 320,
       content => template('apache/vhost/_security.erb')
+    }
+  }
+
+  # Template uses:
+  # - $filters
+  if $filters and ! empty($filters) {
+    concat::fragment { "${name}-filters":
+      target  => "${priority_real}${filename}.conf",
+      order   => 330,
+      content => template('apache/vhost/_filters.erb'),
     }
   }
 

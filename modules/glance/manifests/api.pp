@@ -165,6 +165,27 @@
 # [*os_region_name*]
 #   (optional) Sets the keystone region to use.
 #   Defaults to 'RegionOne'.
+#
+# [*validate*]
+#   (optional) Whether to validate the service is working after any service refreshes
+#   Defaults to false
+#
+# [*validation_options*]
+#   (optional) Service validation options
+#   Should be a hash of options defined in openstacklib::service_validation
+#   If empty, defaults values are taken from openstacklib function.
+#   Default command list images.
+#   Require validate set at True.
+#   Example:
+#   glance::api::validation_options:
+#     glance-api:
+#       command: check_glance-api.py
+#       path: /usr/bin:/bin:/usr/sbin:/sbin
+#       provider: shell
+#       tries: 5
+#       try_sleep: 10
+#   Defaults to {}
+#
 class glance::api(
   $keystone_password,
   $verbose                  = false,
@@ -186,7 +207,7 @@ class glance::api(
   $identity_uri             = false,
   $auth_admin_prefix        = false,
   $auth_protocol            = 'http',
-  $pipeline                 = 'keystone',
+  $pipeline                 = 'keystone+cachemanagement',
   $keystone_tenant          = 'services',
   $keystone_user            = 'glance',
   $manage_service           = true,
@@ -203,6 +224,8 @@ class glance::api(
   $database_idle_timeout    = 3600,
   $image_cache_dir          = '/var/lib/glance/image-cache',
   $os_region_name           = 'RegionOne',
+  $validate                 = false,
+  $validation_options       = {},
   # DEPRECATED PARAMETERS
   $mysql_module             = undef,
   $sql_idle_timeout         = false,
@@ -217,7 +240,11 @@ class glance::api(
   }
 
   if ( $glance::params::api_package_name != $glance::params::registry_package_name ) {
-    ensure_packages([$glance::params::api_package_name])
+    ensure_packages([$glance::params::api_package_name],
+      {
+        tag    => ['openstack'],
+      }
+    )
   }
 
   Package[$glance::params::api_package_name] -> File['/etc/glance/']
@@ -270,11 +297,10 @@ class glance::api(
       fail("Invalid db connection ${database_connection_real}")
     }
     glance_api_config {
+      'database/sqlite_db': ensure => absent;
       'database/connection':   value => $database_connection_real, secret => true;
       'database/idle_timeout': value => $database_idle_timeout_real;
     }
-    glance_api_config { 'database/sqlite_db': ensure => absent; }
-
   }
 
   # basic service config
@@ -289,6 +315,29 @@ class glance::api(
     'DEFAULT/image_cache_dir':       value => $image_cache_dir;
     'DEFAULT/os_region_name':        value => $os_region_name;
   }
+
+  glance_api_config { 'DEFAULT/qpid_notification_exchange': ensure => absent }
+  glance_api_config { 'DEFAULT/qpid_notification_topic': ensure => absent }
+  glance_api_config { 'DEFAULT/qpid_hostname': ensure => absent }
+  glance_api_config { 'DEFAULT/qpid_port': ensure => absent }
+  glance_api_config { 'DEFAULT/qpid_username': ensure => absent }
+  glance_api_config { 'DEFAULT/qpid_password': ensure => absent }
+  glance_api_config { 'DEFAULT/qpid_sasl_mechanisms': ensure => absent }
+  glance_api_config { 'DEFAULT/qpid_reconnect_timeout': ensure => absent }
+  glance_api_config { 'DEFAULT/qpid_reconnect_limit': ensure => absent }
+  glance_api_config { 'DEFAULT/qpid_reconnect_interval_min': ensure => absent }
+  glance_api_config { 'DEFAULT/qpid_reconnect_interval_max': ensure => absent }
+  glance_api_config { 'DEFAULT/qpid_reconnect_interval': ensure => absent }
+  glance_api_config { 'DEFAULT/qpid_heartbeat': ensure => absent }
+  glance_api_config { 'DEFAULT/qpid_protocol': ensure => absent }
+  glance_api_config { 'DEFAULT/qpid_tcp_nodelay': ensure => absent }
+  # code taken from master repo of puppet-glance
+  if $identity_uri {
+    glance_api_config { 'keystone_authtoken/identity_uri': value => $identity_uri; }
+  } else {
+    glance_api_config { 'keystone_authtoken/identity_uri': ensure => absent; }
+  }
+
 
   # known_stores config
   if $known_stores {
@@ -324,13 +373,6 @@ class glance::api(
   } else {
     glance_api_config { 'keystone_authtoken/auth_uri': value => "${auth_protocol}://${auth_host}:5000/"; }
   }
-  # code taken from master repo of puppet-glance
-  if $identity_uri {
-    glance_api_config { 'keystone_authtoken/identity_uri': value => $identity_uri; }
-  } else {
-    glance_api_config { 'keystone_authtoken/identity_uri': ensure => absent; }
-  }
-
 
   # auth config
   glance_api_config {
@@ -376,22 +418,6 @@ class glance::api(
       'DEFAULT/admin_password'   : value => $keystone_password, secret => true;
     }
   }
-  # code to comment out defaultly coming qpid configuration
-  glance_api_config { 'DEFAULT/qpid_notification_exchange': ensure => absent }
-  glance_api_config { 'DEFAULT/qpid_notification_topic': ensure => absent }
-  glance_api_config { 'DEFAULT/qpid_hostname': ensure => absent }
-  glance_api_config { 'DEFAULT/qpid_port': ensure => absent }
-  glance_api_config { 'DEFAULT/qpid_username': ensure => absent }
-  glance_api_config { 'DEFAULT/qpid_password': ensure => absent }
-  glance_api_config { 'DEFAULT/qpid_sasl_mechanisms': ensure => absent }
-  glance_api_config { 'DEFAULT/qpid_reconnect_timeout': ensure => absent }
-  glance_api_config { 'DEFAULT/qpid_reconnect_limit': ensure => absent }
-  glance_api_config { 'DEFAULT/qpid_reconnect_interval_min': ensure => absent }
-  glance_api_config { 'DEFAULT/qpid_reconnect_interval_max': ensure => absent }
-  glance_api_config { 'DEFAULT/qpid_reconnect_interval': ensure => absent }
-  glance_api_config { 'DEFAULT/qpid_heartbeat': ensure => absent }
-  glance_api_config { 'DEFAULT/qpid_protocol': ensure => absent }
-  glance_api_config { 'DEFAULT/qpid_tcp_nodelay': ensure => absent }
 
   # SSL Options
   if $cert_file {
@@ -479,4 +505,15 @@ class glance::api(
     hasstatus  => true,
     hasrestart => true,
   }
+
+  if $validate {
+    $defaults = {
+      'glance-api' => {
+        'command'  => "glance --os-auth-url ${auth_url} --os-tenant-name ${keystone_tenant} --os-username ${keystone_user} --os-password ${keystone_password} image-list",
+      }
+    }
+    $validation_options_hash = merge ($defaults, $validation_options)
+    create_resources('openstacklib::service_validation', $validation_options_hash, {'subscribe' => 'Service[glance-api]'})
+  }
+
 }
